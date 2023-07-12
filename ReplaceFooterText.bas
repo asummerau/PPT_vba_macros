@@ -1,16 +1,18 @@
+' Replace all old years defined in the 'years' array with the current year
 Sub ReplaceFooterText()
     Dim oPres As Presentation
     Dim slideMaster As Master
     Dim shape As shape
     Dim shapes As shapes
     Dim text As String
-    Dim year As String
+    Dim thisYear As String
     Dim layout As CustomLayout
 
     Set oPres = ActivePresentation
-    year = "2017"
+    
     Dim years
     years = Array("2017", "2018", "2019", "2020", "2021", "2022")
+    thisYear = "2023"
     Dim y
     
     With oPres
@@ -27,7 +29,7 @@ Sub ReplaceFooterText()
                 For y = LBound(years) To UBound(years)
                     If InStr(text, years(y)) > 0 Then
                         Debug.Print "Replace Footer!"
-                        shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), "2023")
+                        shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), thisYear)
                     End If
                 Next
                 Debug.Print shape.TextEffect.text
@@ -47,7 +49,7 @@ Sub ReplaceFooterText()
                         For y = LBound(years) To UBound(years)
                             If InStr(text, years(y)) > 0 Then
                                 Debug.Print "Replace Footer!"
-                                shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), "2023")
+                                shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), thisYear)
                             End If
                         Next
                     End If
