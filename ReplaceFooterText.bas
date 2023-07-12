@@ -35,8 +35,7 @@ Sub ReplaceFooterText()
                 Debug.Print shape.TextEffect.text
             Next shape
             
-        
-            ' Most slide layouts do NOT inherit the Footer from the master slide 
+            ' Some slide layouts do NOT inherit the Footer from the master slide 
             ' For those, iterate through all layouts of the current Master and search for the respective field
             For Each layout In .Designs(i).slideMaster.CustomLayouts
                 Debug.Print layout.Index
