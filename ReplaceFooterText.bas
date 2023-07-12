@@ -53,9 +53,6 @@ Sub ReplaceFooterText()
                         Next
                     End If
                 Next shape
-                'For Each shape In .Designs(i).slideMaster.CustomLayouts.shapes
-                 '   Debug.Print shape.TextEffect.text
-                'Next shape
             Next layout
 
             
