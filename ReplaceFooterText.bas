@@ -22,6 +22,7 @@ Sub ReplaceFooterText()
             Set slideMaster = .Designs(i).slideMaster
         
             ' Most slide layouts inerit the Footer directly from the Master, thus change it there
+            On Error Resume Next
             For Each shape In slideMaster.shapes
                 text = shape.TextEffect.text
                 Debug.Print shape.TextEffect.text
@@ -35,10 +36,11 @@ Sub ReplaceFooterText()
                 Debug.Print shape.TextEffect.text
             Next shape
             
-            ' Some slide layouts do NOT inherit the Footer from the master slide 
+            ' Some slide layouts do NOT inherit the Footer from the master slide
             ' For those, iterate through all layouts of the current Master and search for the respective field
             For Each layout In .Designs(i).slideMaster.CustomLayouts
                 Debug.Print layout.Index
+                ' In some layouts the shape.TextEffect is not readable thus skip the error
                 On Error Resume Next
                 For Each shape In layout.shapes
                     If IsObject(shape.TextEffect) Then
