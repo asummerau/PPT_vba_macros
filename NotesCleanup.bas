@@ -9,4 +9,5 @@ Sub Zap()
             End If
         End With
     Next osld
+    MsgBox "Notes cleaup completed!"
 End Sub

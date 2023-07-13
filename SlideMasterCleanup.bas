@@ -40,4 +40,5 @@ Sub SlideMasterCleanup()
         
     End With
     Debug.Print "Finished"
+    MsgBox "Cleaup completed!"
 End Sub
