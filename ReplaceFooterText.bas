@@ -25,32 +25,30 @@ Sub ReplaceFooterText()
             On Error Resume Next
             For Each shape In slideMaster.shapes
                 text = shape.TextEffect.text
-                Debug.Print shape.TextEffect.text
                 
                 For y = LBound(years) To UBound(years)
                     If InStr(text, years(y)) > 0 Then
-                        Debug.Print "Replace Footer!"
+                        Debug.Print "Replace Footer!" & text
                         shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), thisYear)
+                        Debug.Print shape.TextEffect.text
                     End If
                 Next
-                Debug.Print shape.TextEffect.text
             Next shape
             
             ' Some slide layouts do NOT inherit the Footer from the master slide
             ' For those, iterate through all layouts of the current Master and search for the respective field
             For Each layout In .Designs(i).slideMaster.CustomLayouts
-                Debug.Print layout.Index
                 ' In some layouts the shape.TextEffect is not readable thus skip the error
                 On Error Resume Next
                 For Each shape In layout.shapes
                     If IsObject(shape.TextEffect) Then
-                        Debug.Print shape.TextEffect.text
-                        
+
                         text = shape.TextEffect.text
                         For y = LBound(years) To UBound(years)
                             If InStr(text, years(y)) > 0 Then
-                                Debug.Print "Replace Footer!"
+                                Debug.Print "Replace Footer! " & text
                                 shape.TextEffect.text = Replace(shape.TextEffect.text, years(y), thisYear)
+                                Debug.Print shape.TextEffect.text
                             End If
                         Next
                     End If
