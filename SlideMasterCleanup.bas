@@ -1,4 +1,5 @@
 ' This script deletes all unused Masters with all its layout slides
+' Deletion is only done if non of the layout slides is used in the powerpoints
 
 Sub SlideMasterCleanup()
     Dim oPres As Presentation
