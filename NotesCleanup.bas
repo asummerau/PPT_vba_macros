@@ -1,6 +1,6 @@
 ' This script removes all comments from the notes section
 
-Sub Zap()
+Sub NotesCleanup()
     Dim osld As Slide
     For Each osld In ActivePresentation.Slides
         Debug.Print "Slide: " & osld.SlideNumber
