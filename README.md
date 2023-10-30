@@ -3,7 +3,7 @@
 1. Start by opening your PowerPoint file, and then navigate to  *Tools > Macros > Visual Basic Editor*.
 2. In the Visual Basic Editor, under the *Project* section, choose the project you wish to apply changes to.
 3. To import the necessary .bas file, go to  *File > Import File*. Once you've successfully imported the file, it will be added as a Module within your project.
-4. Open this module and execute the desired macro by selecting *Run Macro*. The output will be generated in the*Immediate Window of the Visual Basic Editor* .
+4. Open this module and execute the desired Macro by selecting *Run Macro*. The output will be generated in the *Immediate Window of the Visual Basic Editor*.
 
 ### **NotesCleanup.bas**
 
