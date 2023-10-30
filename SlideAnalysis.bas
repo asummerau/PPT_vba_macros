@@ -1,6 +1,6 @@
 ' Slide Analysis: List all slides that were used in the Slide Masters
 
-Sub SlideMasterCleanup()
+Sub SlideMasterAnalysis()
     Dim oPres As Presentation
     Dim oSlide As Slide
     Dim i As Integer
