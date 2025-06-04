@@ -11,8 +11,8 @@ Sub ReplaceFooterText()
     Set oPres = ActivePresentation
     
     Dim years
-    years = Array("2017", "2018", "2019", "2020", "2021", "2022", "2023")
-    thisYear = "2024"
+    years = Array("2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024")
+    thisYear = "2025"
     Dim y
     
     With oPres
