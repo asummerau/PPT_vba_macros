@@ -55,7 +55,7 @@ Sub SlideMasterAnalysis2()
                     ReDim Preserve nameArray(1 To UBound(nameArray) + 1)
                     ReDim Preserve nameCountArray(1 To UBound(nameCountArray) + 1)
                     nameArray(UBound(nameArray)) = normalizedName
-                    nameCountArray(UBound(countArray)) = 1
+                    nameCountArray(UBound(nameCountArray)) = 1
                 End If
             End If
 
