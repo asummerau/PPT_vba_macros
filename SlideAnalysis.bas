@@ -7,7 +7,8 @@ Sub SlideMasterAnalysis()
     
     Set oPres = ActivePresentation
     
-    On Error Resume Next
+    Debug.Print "-----START-----"
+    ' iterates through all designs used, then checks for each slide if it uses this design 
     With oPres
         For i = .Designs.Count To 1 Step -1
             Debug.Print "List of all slides using: " & .Designs(i).slideMaster.Design.Name
@@ -22,6 +23,8 @@ Sub SlideMasterAnalysis()
         Next i
         
     End With
+    Debug.Print "-----END-------"
+
     MsgBox "Finished!"
     
 End Sub
