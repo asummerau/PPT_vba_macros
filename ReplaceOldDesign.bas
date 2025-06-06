@@ -55,8 +55,7 @@ Sub ReplaceOldDesign()
                 Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & newDesignName & "', skipping."
 
             Else
-                Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
-            
+                'Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
                 'Debug.Print
                 'Debug.Print "------"
                 'Debug.Print
