@@ -89,12 +89,13 @@ Sub NormalizeSlideDesigns()
             End If
 
             ' Find first canonical design with the same normalized name
+            
             For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
                 If normalizedNameArray(j) = normalizedName Then
                     ' If the design of the slide does not match the canonical design, update it
-                    If Not sld.Design.Name = designRefArray(j).Name Then
-                        Debug.Print "Updating Slide " & sld.SlideIndex & ": from '" & sld.Design.Name & "' to '" & designRefArray(j).Name & "'"
-                        sld.Design = designRefArray(j)
+                    If Not sld.design.Name = designRefArray(j).Name Then
+                        Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                        sld.design = designRefArray(j)
 
                         ' Try to find matching layout by name
                         Dim newLayout As CustomLayout
@@ -113,6 +114,10 @@ Sub NormalizeSlideDesigns()
                         If Not foundLayout Then
                             Debug.Print "WARNING: Could not find matching layout '" & layoutName & "' in new master. Using default layout."
                         End If
+                        
+                    Else
+                        Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                    
                     End If
                     Exit For
                 End If
