@@ -28,7 +28,7 @@ Removes all unused Slide Master. A slide Master and all its layouts are only rem
 Normalizes slide designs in a PowerPoint presentation. When having the same master designs imported multiple time (e.g. "23_Blue_theme" is the same as "Blue_theme"), it will ensure that each slide from "23_Blue_theme" is moved to "Blue_theme" while still keeping the same layout.
 
 ## Useful Flows
-Problem: You have duplicate Slide Masters (e.g. "23_Blue_theme","23_Blue_theme", "Blue_theme" etc.) and you want to use only one of those identical Slide masters instead.
+Problem: You have duplicate Slide Masters (e.g. "23_Blue_theme","22_Blue_theme", "Blue_theme" etc.) and you want to use only one of those identical Slide masters instead.
 Fix: run the following scripts  
 1. Analysis1
 2. Analysis2
