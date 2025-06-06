@@ -8,11 +8,11 @@ Sub SlideMasterAnalysis2()
     Dim normalizedName As String
     Dim underscorePos As Integer
     Dim foundIndex As Long
-    Dim nameArray() As String
+    Dim normalizedNameArray() As String
     Dim nameCountArray() As Long
     Dim outputLen As Integer
 
-    ReDim nameArray(1 To 1)
+    ReDim normalizedNameArray(1 To 1)
     ReDim nameCountArray(1 To 1)
 
     Set oPres = ActivePresentation
@@ -20,7 +20,7 @@ Sub SlideMasterAnalysis2()
     On Error Resume Next
     With oPres
         For i = .Designs.Count To 1 Step -1
-            designName = .Designs(i).slideMaster.Design.Name
+            designName = .Designs(i).SlideMaster.Design.Name
             underscorePos = InStr(designName, "_")
 
             ' Remove number prefix and underscore if present (e.g. "23_Blue_theme" -> "Blue_theme")
@@ -35,8 +35,8 @@ Sub SlideMasterAnalysis2()
 
             ' Check if name already exists in array
             foundIndex = 0
-            For j = LBound(nameArray) To UBound(nameArray)
-                If nameArray(j) = normalizedName Then
+            For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
+                If normalizedNameArray(j) = normalizedName Then
                     foundIndex = j
                     Exit For
                 End If
@@ -44,21 +44,21 @@ Sub SlideMasterAnalysis2()
 
             If foundIndex > 0 Then
                 nameCountArray(foundIndex) = nameCountArray(foundIndex) + 1
-            ' Add new entry if foundindex = 0 (normalizedName was not found in nameArray)
+            ' Add new entry if foundindex = 0
             Else
-                ' if nameArray is completely empty, add it at position 1
-                If nameArray(1) = "" Then
-                    nameArray(1) = normalizedName
+                ' if normalizedNameArray is completely empty, add it at position 1
+                If normalizedNameArray(1) = "" Then
+                    normalizedNameArray(1) = normalizedName
                     nameCountArray(1) = 1
                 ' increase size of array by 1 and append new item
                 Else
-                    ReDim Preserve nameArray(1 To UBound(nameArray) + 1)
+                    ReDim Preserve normalizedNameArray(1 To UBound(normalizedNameArray) + 1)
                     ReDim Preserve nameCountArray(1 To UBound(nameCountArray) + 1)
-                    nameArray(UBound(nameArray)) = normalizedName
+                
+                    normalizedNameArray(UBound(normalizedNameArray)) = normalizedName
                     nameCountArray(UBound(nameCountArray)) = 1
                 End If
             End If
-
         Next i
     End With
 
@@ -66,13 +66,13 @@ Sub SlideMasterAnalysis2()
     ' max output len = 20
     outputLen = 35
     Debug.Print String(outputLen, "-")
-    Debug.Print "Design Name -------- Design Count"
+    Debug.Print "Design Name ---------------- Count"
     Debug.Print String(outputLen, "-")
     
     ' max output len = 20
     outputLen = 30
-    For i = LBound(nameArray) To UBound(nameArray)
-        Debug.Print nameArray(i) & String(outputLen - Len(nameArray(i)), "-") & nameCountArray(i)
+    For i = LBound(normalizedNameArray) To UBound(normalizedNameArray)
+        Debug.Print normalizedNameArray(i) & String(outputLen - Len(normalizedNameArray(i)), "-") & nameCountArray(i)
     Next i
 
     MsgBox "Finished!"
