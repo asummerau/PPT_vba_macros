@@ -1,18 +1,19 @@
 
-' ReplaceOldDesign: Replace old design in PowerPoint presentation with a new design. 
+' ReplaceOldDesign: Replace old design in PowerPoint presentation with a new design.
 ' This macro replaces the old designs in the slides only if the layout names match. If a matching layout is not found, it skips that slide and logs a warning.
 ' NOTE: this code may mess up your presentation.
 Sub ReplaceOldDesign()
     Dim oPres As Presentation
     Dim sld As Slide
-    Dim design As Design
+    Dim Design As Design
     Dim layoutName As String
     Dim i As Integer
     Dim designName As String
-    Dim newDesignName As String    
+    Dim newDesignName As String
     Dim newDesign As Design
     Dim newLayout As CustomLayout
     Dim foundLayout As Boolean
+    'Dim currentLayouts As CustomLayouts
 
     Set oPres = ActivePresentation
 
@@ -39,12 +40,26 @@ Sub ReplaceOldDesign()
             Exit Sub
         End If
 
+        ' For Each layout In newDesign.SlideMaster.CustomLayouts
+        '    Debug.Print layout.Name
+        ' Next layout
+
         ' STEP 2: Try to replace old designs with the new design if the layout name matches
         For Each sld In oPres.Slides
             layoutName = sld.CustomLayout.Name
-            designName = sld.Design.Name
+            designName = sld.design.Name
+            'Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
             
-            foundLayout = False                     
+            'Debug.Print
+            'Debug.Print "------"
+            'Debug.Print
+            
+            ' Debug.Print "Found  design: " & sld.Master.design.Name
+            ' For Each clayout In currentLayouts
+            '    Debug.Print clayout.Name
+            ' Next clayout
+
+            foundLayout = False
             
             If sld.Design.Name = newDesignName Then
                 Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & newDesignName & "', skipping."
@@ -64,9 +79,9 @@ Sub ReplaceOldDesign()
 
                 If Not foundLayout Then
                     Debug.Print "WARNING: Slide " & sld.SlideIndex & " - Could not find matching layout '" & layoutName & "' in new master. Skipping."
-                End If   
+                End If
 
-            End If       
+            End If
         Next sld
     End With
     Debug.Print "-----END-----"
