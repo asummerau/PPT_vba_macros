@@ -24,7 +24,7 @@ Sub SlideMasterAnalysis2()
     On Error Resume Next
     With oPres
         For i = .Designs.Count To 1 Step -1
-            designName = .Designs(i).SlideMaster.Design.Name
+            designName = .Designs(i).SlideMaster.design.Name
             underscorePos = InStr(designName, "_")
 
             ' Remove number prefix and underscore if present (e.g. "23_Blue_theme" -> "Blue_theme")
@@ -73,18 +73,19 @@ Sub SlideMasterAnalysis2()
         Next i
     End With
 
-
-    ' max output len = 20
+    Debug.Print
+    Debug.Print "-----START-----"
     outputLen = 35
     Debug.Print String(outputLen, "-")
     Debug.Print "Design Name ---------------- Count"
     Debug.Print String(outputLen, "-")
     
-    ' max output len = 20
     outputLen = 30
     For i = LBound(origNameArray) To UBound(origNameArray)
         Debug.Print origNameArray(i) & String(outputLen - Len(origNameArray(i)), "-") & nameCountArray(i)
     Next i
+    Debug.Print "-----END-------"
+    Debug.Print
 
     MsgBox "Finished!"
     
