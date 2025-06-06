@@ -40,24 +40,14 @@ Sub ReplaceOldDesign()
             Exit Sub
         End If
 
-        ' For Each layout In newDesign.SlideMaster.CustomLayouts
+        'For Each layout In newDesign.SlideMaster.CustomLayouts
         '    Debug.Print layout.Name
-        ' Next layout
+        'Next layout
 
         ' STEP 2: Try to replace old designs with the new design if the layout name matches
         For Each sld In oPres.Slides
             layoutName = sld.CustomLayout.Name
             designName = sld.design.Name
-            'Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
-            
-            'Debug.Print
-            'Debug.Print "------"
-            'Debug.Print
-            
-            ' Debug.Print "Found  design: " & sld.Master.design.Name
-            ' For Each clayout In currentLayouts
-            '    Debug.Print clayout.Name
-            ' Next clayout
 
             foundLayout = False
             
@@ -65,6 +55,15 @@ Sub ReplaceOldDesign()
                 Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & newDesignName & "', skipping."
 
             Else
+                Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
+            
+                'Debug.Print
+                'Debug.Print "------"
+                'Debug.Print
+                'Debug.Print "Found  design: " & sld.Master.design.Name
+                'For Each clayout In currentLayouts
+                '    Debug.Print clayout.Name
+                'Next clayout
 
                 ' Check if the layout name matches any layout in the new design
                 For Each newLayout In newDesign.SlideMaster.CustomLayouts
