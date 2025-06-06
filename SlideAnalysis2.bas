@@ -1,4 +1,6 @@
 ' Slide Analysis2: Lists all used (unique) Slide Designs and how often the same Design Layout was imported.
+' There are usually many duplicate slide masters that have the same name but with a different number prefix. (e.g. "23_Blue_theme" and "24_Blue_theme"). 
+' This script analyes how often the same design was used, regardless of the number prefix.
 Sub SlideMasterAnalysis2()
     Dim oPres As Presentation
     Dim sld As Slide
@@ -10,9 +12,11 @@ Sub SlideMasterAnalysis2()
     Dim foundIndex As Long
     Dim normalizedNameArray() As String
     Dim nameCountArray() As Long
+    Dim origNameArray() As String
     Dim outputLen As Integer
 
     ReDim normalizedNameArray(1 To 1)
+    ReDim origNameArray(1 To 1)
     ReDim nameCountArray(1 To 1)
 
     Set oPres = ActivePresentation
@@ -44,19 +48,26 @@ Sub SlideMasterAnalysis2()
 
             If foundIndex > 0 Then
                 nameCountArray(foundIndex) = nameCountArray(foundIndex) + 1
-            ' Add new entry if foundindex = 0
+                ' if orignalName is non-normalized, and the current designName is normalized, update the original name
+                If designName = normalizedName And origNameArray(foundIndex) <> designName Then
+                    origNameArray(foundIndex) = designName
+                End If
+            ' Add new entry if foundindex = 0 (normalizedName was not found in normalizedNameArray)
             Else
                 ' if normalizedNameArray is completely empty, add it at position 1
                 If normalizedNameArray(1) = "" Then
                     normalizedNameArray(1) = normalizedName
                     nameCountArray(1) = 1
+                    origNameArray(1) = designName
                 ' increase size of array by 1 and append new item
                 Else
                     ReDim Preserve normalizedNameArray(1 To UBound(normalizedNameArray) + 1)
                     ReDim Preserve nameCountArray(1 To UBound(nameCountArray) + 1)
+                    ReDim Preserve origNameArray(1 To UBound(origNameArray) + 1)
                 
                     normalizedNameArray(UBound(normalizedNameArray)) = normalizedName
                     nameCountArray(UBound(nameCountArray)) = 1
+                    origNameArray(UBound(origNameArray)) = designName
                 End If
             End If
         Next i
@@ -71,8 +82,8 @@ Sub SlideMasterAnalysis2()
     
     ' max output len = 20
     outputLen = 30
-    For i = LBound(normalizedNameArray) To UBound(normalizedNameArray)
-        Debug.Print normalizedNameArray(i) & String(outputLen - Len(normalizedNameArray(i)), "-") & nameCountArray(i)
+    For i = LBound(origNameArray) To UBound(origNameArray)
+        Debug.Print origNameArray(i) & String(outputLen - Len(origNameArray(i)), "-") & nameCountArray(i)
     Next i
 
     MsgBox "Finished!"
