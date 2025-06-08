@@ -15,30 +15,21 @@ Sub ReplaceOldDesign2()
     Dim newLayout As CustomLayout
     Dim foundLayout As Boolean
     Dim currentLayouts As CustomLayouts
+    Dim nItems As Integer
+    Dim layoutMapping() As String
 
-    Dim layoutMapping(0 To 5, 0 To 1) As String
+    nItems = 11
+    ReDim layoutMapping(0 To nItems, 0 To 1)
 
     ' TODO: fill in the Slide Master Names
     layoutMapping(0, 0) = "OLD MASTER NAME"
     layoutMapping(0, 1) = "NEW MASTER NAME"
 
     ' TODO: fill in the Layout Names you want to replace 
-    ' (i, 0) are layouts from the old Master, (i, 1) form the new
-    layoutMapping(1, 0) = ""
-    layoutMapping(1, 1) = ""
-
-    layoutMapping(2, 0) = ""
-    layoutMapping(2, 1) = ""
-
-    layoutMapping(3, 0) = ""
-    layoutMapping(3, 1) = ""
-
-    layoutMapping(4, 0) = ""
-    layoutMapping(4, 1) = ""
-
-    layoutMapping(5, 0) = ""
-    layoutMapping(5, 1) = ""
-
+    ' EXAMPLE:
+    ' layoutMapping(1, 0) = "Title Slide" 'layout name from old master
+    ' layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
+	
     Set oPres = ActivePresentation
 
     On Error Resume Next
@@ -78,12 +69,12 @@ Sub ReplaceOldDesign2()
             If designName = oldDesignName Then
                 Debug.Print "Find repalcement for: " & layoutName
                 ' Check if a mapping exists in the predefined array
-                For j = 1 To 5
+                For j = 1 To nItems
                     If foundLayout Then Exit For
                     
                      If Trim(layoutName) = Trim(layoutMapping(j, 0)) Then
                     ' if a mapping was found, find right layout from the new design
-                        For Each newLayout In newLayouts 
+                        For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
                                 
                                 Debug.Print "Slide " & sld.SlideIndex & ": Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
