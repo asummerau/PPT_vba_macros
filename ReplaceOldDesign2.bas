@@ -13,17 +13,19 @@ Sub ReplaceOldDesign2()
     Dim newDesign As Design
     Dim newLayouts As CustomLayouts
     Dim newLayout As CustomLayout
-    Dim foundLayout As Boolean
+    Dim foundNewLayout As Boolean
+    Dim foundOldLayout As Boolean
     Dim currentLayouts As CustomLayouts
     Dim nItems As Integer
     Dim layoutMapping() As String
+    Dim underscorePos As Integer
 
-    nItems = 11
     ReDim layoutMapping(0 To nItems, 0 To 1)
 
-    ' TODO: fill in the Slide Master Names
+    ' TODO: fill in the Slide Master Names and update the number of mappings
     layoutMapping(0, 0) = "OLD MASTER NAME"
     layoutMapping(0, 1) = "NEW MASTER NAME"
+    nItems = 11
 
     ' TODO: fill in the Layout Names you want to replace 
     ' EXAMPLE:
@@ -61,18 +63,27 @@ Sub ReplaceOldDesign2()
 
         ' STEP 2: Try to replace old designs with the new design based on the predefined mapping array
         For Each sld In oPres.Slides
-            layoutName = sld.CustomLayout.Name
-            designName = sld.Design.Name
+            layoutName = Trim(sld.CustomLayout.Name)
+            designName = Trim(sld.Design.Name)
 
-            foundLayout = False
-            
+            foundNewLayout = False
+            foundOldLayout = False
+
             If designName = oldDesignName Then
                 Debug.Print "Find repalcement for: " & layoutName
                 ' Check if a mapping exists in the predefined array
+
+                ' there are tons of duplicate layouts that start with a prefix (e.g. 1_title is the same as title)
+                underscorePos = InStr(layoutName, "_")
+                If underscorePos > 1 And IsNumeric(Left(layoutName, underscorePos - 1)) Then
+                    layoutName = Mid(layoutName, underscorePos + 1)
+                End If
+
                 For j = 1 To nItems
-                    If foundLayout Then Exit For
-                    
-                     If Trim(layoutName) = Trim(layoutMapping(j, 0)) Then
+                    If foundNewLayout Then Exit For
+
+                     If layoutName = Trim(layoutMapping(j, 0)) Then
+                        foundOldLayout = True
                     ' if a mapping was found, find right layout from the new design
                         For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
@@ -80,7 +91,7 @@ Sub ReplaceOldDesign2()
                                 Debug.Print "Slide " & sld.SlideIndex & ": Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
                                 sld.Design = newLayout.Design
                                 sld.CustomLayout = newLayout
-                                foundLayout = True
+                                foundNewLayout = True
                                 Exit For
                             End If
                         Next newLayout
@@ -88,7 +99,9 @@ Sub ReplaceOldDesign2()
                     End If
                 Next j
                 
-                If Not foundLayout Then
+                If foundOldLayout And Not foundNewLayout Then
+                    Debug.Print "WARNING2: Slide " & sld.SlideIndex & ": No matching layout found for '" & layoutName & "' in new design. Skipped."
+                ElseIf Not foundOldLayout Then
                     Debug.Print "WARNING: Slide " & sld.SlideIndex & ": No matching layout found for '" & layoutName & "'. Skipped."
                 End If
             
