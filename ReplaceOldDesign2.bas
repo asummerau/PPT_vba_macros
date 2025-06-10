@@ -75,6 +75,11 @@ Sub ReplaceOldDesign2()
             foundNewLayout = False
             foundOldLayout = False
 
+            underscorePos = InStr(designName, "_")
+            If underscorePos > 1 And IsNumeric(Left(i, underscorePos - 1)) Then
+                designName = Mid(designName, underscorePos + 1)
+            End If
+
             If designName = oldDesignName Then
                 Debug.Print "Find repalcement for: " & layoutName
                 ' Check if a mapping exists in the predefined array
@@ -90,7 +95,7 @@ Sub ReplaceOldDesign2()
 
                      If layoutName = Trim(layoutMapping(j, 0)) Then
                         foundOldLayout = True
-                    ' if a mapping was found, find right layout from the new design
+                        ' if a mapping was found, find right layout from the new design
                         For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
                                 
