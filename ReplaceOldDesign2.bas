@@ -48,7 +48,13 @@ Sub ReplaceOldDesign2()
         Set newDesign = Nothing
         Set newLayouts = Nothing
         For i = .Designs.Count To 1 Step -1
-            If .Designs(i).Name = newDesignName Then
+            layoutname = Trim(.Designs(i).Name)
+            underscorePos = InStr(layoutName, "_")
+            If underscorePos > 1 And IsNumeric(Left(i, underscorePos - 1)) Then
+                layoutName = Mid(layoutName, underscorePos + 1)
+            End If
+
+            If layoutname = newDesignName Then
                 ' Debug.Print "Found new design: " & .Designs(i).Name
                 Set newDesign = .Designs(i)
                 Set newLayouts = .Designs(i).SlideMaster.CustomLayouts
