@@ -20,17 +20,17 @@ Sub ReplaceOldDesign2()
     Dim layoutMapping() As String
     Dim underscorePos As Integer
 
+    ' TODO: Specify number of mappings you want to use
+    nItems = 20
     ReDim layoutMapping(0 To nItems, 0 To 1)
 
     ' TODO: fill in the Slide Master Names and update the number of mappings
     layoutMapping(0, 0) = "OLD MASTER NAME"
     layoutMapping(0, 1) = "NEW MASTER NAME"
-    nItems = 11
 
-    ' TODO: fill in the Layout Names you want to replace 
-    ' EXAMPLE:
-    ' layoutMapping(1, 0) = "Title Slide" 'layout name from old master
-    ' layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
+    ' TODO: fill in the Layout Names you want to replace. E.g.:
+    layoutMapping(1, 0) = "Title Slide" 'layout name from old master
+    layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
 	
     Set oPres = ActivePresentation
 
