@@ -1,4 +1,5 @@
 
+' printalllayouts: this simple macro prints all custom layouts of the specified master design.
 Sub printalllayouts()
     Dim oPres As Presentation
     Dim Design As Design
