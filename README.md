@@ -21,6 +21,9 @@ Generates a list of Master names and the associated slides using layouts from th
 - **SlideAnalysis2.bas**
 Lists all unique Slide Designs and counts how often each Design Layout was imported. (e.g. If you dec contains `"23_Blue_theme"`, `"22_Blue_theme"`, and `"Blue_theme"`, the output will tell you you have `"Blue_theme"` 3x imported).
 
+- **printalllayouts.bas**
+Prints all custom layouts of the specified master design.
+
 - **SlideMasterCleanup.bas**
 Removes all unused Slide Masters.  
 A Master (and all its layouts) is only removed if none of its layouts is used in the presentation.
@@ -31,6 +34,9 @@ If the same Master Design is imported multiple times (e.g. `"23_Blue_theme"`, `"
 
 - **ReplaceOldDesign.bas**
 Replaces the layout of a slide to the layout of the specified Master Design which has to be specified in the code. A slide will only be changed, if the current layout name matches any layout name in the new Master.
+
+- **ReplaceOldDesign2.bas**
+Replaces the layout of a slide to the layout of the specified Master Design which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
 
 ## Useful Flows
 
