@@ -18,6 +18,19 @@ Updates the year in the PowerPoint footer to match the current year (currently 2
 - **SideAnalysis.bas**
 Generates a list of Master names and the associated slides using layouts from the corresponding Master.
 
+    <ins>Output</ins>:
+    ```
+    -----START-----
+    List of all slides using: Green_theme
+    PPT Slide #: 3
+    PPT Slide #: 4
+    List of all slides using: Blue_theme
+    PPT Slide #: 1
+    PPT Slide #: 2
+    PPT Slide #: 5
+    PPT Slide #: 6
+    -----END-------
+    ```
 - **SlideAnalysis2.bas**
 Lists all unique Slide Designs and counts how often each Design Layout was imported. (e.g. If you dec contains `"23_Blue_theme"`, `"22_Blue_theme"`, and `"Blue_theme"`, the output will tell you you have `"Blue_theme"` 3x imported).
 
