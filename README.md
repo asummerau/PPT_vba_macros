@@ -21,6 +21,16 @@ Generates a list of Master names and the associated slides using layouts from th
 - **SlideAnalysis2.bas**
 Lists all unique Slide Designs and counts how often each Design Layout was imported. (e.g. If you dec contains `"23_Blue_theme"`, `"22_Blue_theme"`, and `"Blue_theme"`, the output will tell you you have `"Blue_theme"` 3x imported).
 
+    <ins>Output</ins>:
+    ```
+    -----START-----
+    -----------------------------------
+    Design Name ---------------- Count
+    -----------------------------------
+    Blue_theme ----3
+    Green_theme----1
+    -----END-------
+    ```
 - **printalllayouts.bas**
 Prints all custom layouts of the specified master design.
 
