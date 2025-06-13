@@ -50,7 +50,7 @@ Prints all custom layouts of the specified master design. The name of the master
     <ins>Output</ins>:
     ```
     -----START-----
-    Found new design: Blue_theme
+    Found design: Blue_theme
     Title Slide
     Agenda 
     Section, Title 
