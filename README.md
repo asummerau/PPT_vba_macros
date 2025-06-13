@@ -44,9 +44,20 @@ Lists all unique Slide Designs and counts how often each Design Layout was impor
     Green_theme----1
     -----END-------
     ```
-- **printalllayouts.bas**
-Prints all custom layouts of the specified master design.
-
+- **Printalllayouts.bas**
+Prints all custom layouts of the specified master design. The name of the master needs to be specified in the macro. 
+    
+    <ins>Output</ins>:
+    ```
+    -----START-----
+    Found new design: Blue_theme
+    Title Slide
+    Agenda 
+    Section, Title 
+    ...
+    Closing 
+    -----END-----
+    ```
 - **SlideMasterCleanup.bas**
 Removes all unused Slide Masters.  
 A Master (and all its layouts) is only removed if none of its layouts is used in the presentation.
