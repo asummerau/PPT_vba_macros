@@ -109,7 +109,6 @@ Sub NormalizeSlideDesigns()
                                     sld.CustomLayout = newLayout
                                     sld.design = designRefArray(j) 
                                     Exit For
-                                ' if the layout does not exist, just copy the layout into the new master design
                                 End If
                             Next newLayout
 
