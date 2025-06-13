@@ -1,4 +1,5 @@
-'NomralizedSlideDesigns: This macro normalizes slide designs in a PowerPoint presentation by removing numeric prefixes and underscores from design names, ensuring consistent design usage across slides.
+'NomralizedSlideDesigns: Thi macro moves slides to a canonical master design if there are multiple designs with similar names in the presentation.
+' If the same Master Design is imported multiple times (e.g. `"23_Blue_theme"`, `"22_Blue_theme"`, `"Blue_theme"`), it ensures that all slides are moved to the canonical design (e.g. `"Blue_theme"`), while preserving the layout used on each slide.
 Sub NormalizeSlideDesigns()
     Dim oPres As Presentation
     Dim sld As Slide
