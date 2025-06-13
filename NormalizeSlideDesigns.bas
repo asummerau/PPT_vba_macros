@@ -75,11 +75,11 @@ Sub NormalizeSlideDesigns()
             End If
 
         Next i
-        
+
         ' STEP 2: Go through slides and update layout if better matching design exists
         For Each sld In oPres.Slides
-            layoutName = sld.CustomLayout.Name ' Save current layout name
-            designName = sld.Design.Name
+            layoutName = Trim(sld.CustomLayout.Name)
+            designName = Trim(sld.Design.Name)
             underscorePos = InStr(designName, "_")
 
             ' Remove number prefix and underscore if present (e.g. "23_Blue_theme" -> "Blue_theme")
@@ -89,40 +89,46 @@ Sub NormalizeSlideDesigns()
                 normalizedName = designName
             End If
 
-            ' Find first canonical design with the same normalized name
-            
-            For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
-                If normalizedNameArray(j) = normalizedName Then
-                    ' If the design of the slide does not match the canonical design, update it
-                    If Not sld.design.Name = designRefArray(j).Name Then
-                        Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
-                        sld.design = designRefArray(j)
+            ' if the current design is already normalized, skip it
+            If normalizedName = designName Then
+                Debug.Print "Slide " & sld.SlideIndex & " already uses normalized design: " & designName
+                GoTo NextSlide
+            Else
+            ' else find canonical design with the same normalized name
+                For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
+                    If normalizedNameArray(j) = normalizedName Then
+                        ' verify that the design of the slide does not match the canonical design (should already be a given)
+                        If Not sld.design.Name = designRefArray(j).Name Then
+                            Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                            sld.design = designRefArray(j)
 
-                        ' Try to find matching layout by name
-                        Dim newLayout As CustomLayout
-                        Dim foundLayout As Boolean
-                        foundLayout = False
+                            ' Try to find matching layout by name
+                            Dim newLayout As CustomLayout
+                            Dim foundLayout As Boolean
+                            foundLayout = False
 
-                        ' Check if the layout name matches any layout in the new design
-                        For Each newLayout In designRefArray(j).SlideMaster.CustomLayouts
-                            If newLayout.Name = layoutName Then
-                                sld.CustomLayout = newLayout
-                                foundLayout = True
-                                Exit For
+                            ' Check if the layout name matches any layout in the new design
+                            For Each newLayout In designRefArray(j).SlideMaster.CustomLayouts
+                                If newLayout.Name = layoutName Then
+                                    sld.CustomLayout = newLayout
+                                    foundLayout = True
+                                    Exit For
+                                End If
+                            Next newLayout
+
+                            If Not foundLayout Then
+                                Debug.Print "WARNING: Could not find matching layout '" & layoutName & "' in new master. Using default layout."
                             End If
-                        Next newLayout
-
-                        If Not foundLayout Then
-                            Debug.Print "WARNING: Could not find matching layout '" & layoutName & "' in new master. Using default layout."
-                        End If
+                            
+                        Else
+                            Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
                         
-                    Else
-                        Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
-                    
+                        End If
+                        Exit For
                     End If
-                    Exit For
-                End If
-            Next j
+                Next j
+            End If
+        NextSlide:
         Next sld
     End With
 
