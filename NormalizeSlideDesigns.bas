@@ -92,8 +92,6 @@ Sub NormalizeSlideDesigns()
                     If normalizedNameArray(j) = normalizedName Then
                         ' verify that the design of the slide does not match the canonical design (should already be a given)
                         If Not sld.design.Name = designRefArray(j).Name Then
-                            Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
-                            sld.design = designRefArray(j) ' this copies the layout from the old design already to the new design so the slide will not lose its layout. (increases number of layouts in the new design)
 
                             ' Try to find matching layout by name
                             Dim newLayout As CustomLayout
@@ -105,14 +103,19 @@ Sub NormalizeSlideDesigns()
                                 Dim temp As String
                                 temp = GetCanonicalName(newLayout.Name)
                                 If temp = normalizedLayoutName Then
-                                    sld.CustomLayout = newLayout
+                                    Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
                                     foundLayout = True
+
+                                    sld.CustomLayout = newLayout
+                                    sld.design = designRefArray(j) 
                                     Exit For
+                                ' if the layout does not exist, just copy the layout into the new master design
                                 End If
                             Next newLayout
 
                             If Not foundLayout Then
-                                Debug.Print "WARNING: Could not find matching layout '" & layoutName & "' in new master. Using default layout."
+                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normalizedLayoutName & "' in new master, skipping."
+                                ' sld.design = designRefArray(j) -> This line not only copies over this layout but also all other layouts from the old design
                             End If
                             
                         Else
