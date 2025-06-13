@@ -1,11 +1,11 @@
 
-' printalllayouts: this simple macro prints all custom layouts of the specified master design.
-Sub printalllayouts()
+' Printalllayouts: this simple macro prints all custom layouts of the specified master design.
+Sub Printalllayouts()
     Dim oPres As Presentation
     Dim Design As Design
     Dim i As Integer
-    Dim newDesignName As String
-    Dim newDesign As Design
+    Dim myDesignName As String
+    Dim myDesign As Design
 
     Set oPres = ActivePresentation
 
@@ -14,25 +14,25 @@ Sub printalllayouts()
 
     With oPres
         ' TODO: Add here the name of the new design
-        newDesignName = "DESIGN NAME"
+        myDesignName = "DESIGN NAME"
 
         ' STEP 1: Find the new design in the presentation
-        Set newDesign = Nothing
+        Set myDesign = Nothing
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
-            If design.Name = newDesignName Then
+            If design.Name = myDesignName Then
                 Debug.Print "Found new design: " & design.Name
-                Set newDesign = design
+                Set myDesign = design
                 Exit For
             End If
         Next i
         
-        If newDesign Is Nothing Then
-            MsgBox "New design '" & newDesignName & "' not found in the presentation.", vbExclamation
+        If myDesign Is Nothing Then
+            MsgBox "New design '" & myDesignName & "' not found in the presentation.", vbExclamation
             Exit Sub
         End If
 
-        For Each layout In newDesign.SlideMaster.CustomLayouts
+        For Each layout In myDesign.SlideMaster.CustomLayouts
             Debug.Print layout.Name
         Next layout
     End With
