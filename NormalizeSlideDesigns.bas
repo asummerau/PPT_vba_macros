@@ -9,7 +9,7 @@ Sub NormalizeSlideDesigns()
     Dim i As Integer, j As Integer
     Dim designName As String
     Dim normalizedName As String
-    Dim underscorePos As Integer
+    Dim normalizedLayoutName As String
     Dim foundIndex As Long
     Dim normalizedNameArray() As String
     Dim nameCountArray() As Long
@@ -30,14 +30,7 @@ Sub NormalizeSlideDesigns()
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
             designName = .Designs(i).SlideMaster.Design.Name
-            underscorePos = InStr(designName, "_")
-
-            ' If design has a prefix, remove it (e.g. "23_Blue_theme" -> "Blue_theme")
-            If underscorePos > 1 And IsNumeric(Left(designName, underscorePos - 1)) Then
-                normalizedName = Mid(designName, underscorePos + 1)
-            Else
-                normalizedName = designName
-            End If
+            normalizedName = GetCanonicalName(designName)
 
             ' Check if the normalized name has been added before
             foundIndex = 0
@@ -86,14 +79,8 @@ Sub NormalizeSlideDesigns()
         For Each sld In oPres.Slides
             layoutName = Trim(sld.CustomLayout.Name)
             designName = Trim(sld.Design.Name)
-            underscorePos = InStr(designName, "_")
-
-            ' Remove number prefix and underscore if present (e.g. "23_Blue_theme" -> "Blue_theme")
-            If underscorePos > 1 And IsNumeric(Left(designName, underscorePos - 1)) Then
-                normalizedName = Mid(designName, underscorePos + 1)
-            Else
-                normalizedName = designName
-            End If
+            normalizedName = GetCanonicalName(designName)
+            normalizedLayoutName = GetCanonicalName(layoutName)
 
             ' if the current design is already normalized, skip it
             If normalizedName = designName Then
@@ -106,7 +93,7 @@ Sub NormalizeSlideDesigns()
                         ' verify that the design of the slide does not match the canonical design (should already be a given)
                         If Not sld.design.Name = designRefArray(j).Name Then
                             Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
-                            sld.design = designRefArray(j)
+                            sld.design = designRefArray(j) ' this copies the layout from the old design already to the new design so the slide will not lose its layout. (increases number of layouts in the new design)
 
                             ' Try to find matching layout by name
                             Dim newLayout As CustomLayout
@@ -115,7 +102,9 @@ Sub NormalizeSlideDesigns()
 
                             ' Check if the layout name matches any layout in the new design
                             For Each newLayout In designRefArray(j).SlideMaster.CustomLayouts
-                                If newLayout.Name = layoutName Then
+                                Dim temp As String
+                                temp = GetCanonicalName(newLayout.Name)
+                                If temp = normalizedLayoutName Then
                                     sld.CustomLayout = newLayout
                                     foundLayout = True
                                     Exit For
@@ -142,3 +131,22 @@ Sub NormalizeSlideDesigns()
 
 End Sub
 
+
+Function GetCanonicalName(name As String) As String
+    Dim underscorePos As Integer
+    Dim prefix As String
+    Dim cleanedName As String
+
+    cleanedName = Trim(name)
+    underscorePos = InStr(cleanedName, "_")
+    
+    If underscorePos > 1 Then
+        prefix = Left(cleanedName, underscorePos - 1)
+        If IsNumeric(prefix) Then
+            GetCanonicalName = Mid(cleanedName, underscorePos + 1)
+            Exit Function
+        End If
+    End If
+    
+    GetCanonicalName = cleanedName
+End Function
