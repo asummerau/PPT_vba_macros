@@ -21,7 +21,7 @@ Sub Printalllayouts()
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
             If design.Name = myDesignName Then
-                Debug.Print "Found new design: " & design.Name
+                Debug.Print "Found design: " & design.Name
                 Set myDesign = design
                 Exit For
             End If
