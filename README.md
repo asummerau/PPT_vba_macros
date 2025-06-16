@@ -45,7 +45,7 @@ Lists all unique Slide Masters used in the PowerPoint and counts how often the s
     -----END-------
     ```
 - **Printalllayouts.bas**
-Prints all custom layouts of the specified master design. The name of the master needs to be specified in the macro. 
+Prints all custom layouts of the specified Slide Master. The name of the Slide Master needs to be specified in the macro (e.g., here `"Blue_theme"`). 
     
     <ins>Output</ins>:
     ```
