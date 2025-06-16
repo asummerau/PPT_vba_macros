@@ -58,19 +58,20 @@ Prints all custom layouts of the specified Slide Master. The name of the Slide M
     Closing 
     -----END-----
     ```
-- **SlideMasterCleanup.bas**
-Removes all unused Slide Masters.  
-A Master (and all its layouts) is only removed if none of its layouts is used in the presentation.
 
 - **NormalizeSlideDesings.bas**
 Normalizes slide designs in the presentation.  
 If the same Slide Master is imported multiple times (e.g. `"23_Blue_theme"`, `"22_Blue_theme"`, `"Blue_theme"`), it ensures that all slides are moved to the canonical Slide Master (e.g. `"Blue_theme"`), while preserving the layout used on each slide. After running this macro, use `SlideMasterCleanup.bas` to remove the unused (non-canonical) Slide Masters (`"23_Blue_theme"`, `"22_Blue_theme"`).
 
+- **SlideMasterCleanup.bas**
+Removes all unused Slide Masters.  
+A Master (and all its layouts) is only removed if none of its layouts is used in the presentation.
+
 - **ReplaceOldDesign.bas**
-Replaces the layout of a slide to the layout of the specified Slide Master which has to be specified in the code. A slide will only be changed, if the current layout name matches any layout name in the new Master.
+Replaces the layout of a slide to the layout of the new Slide Master which has to be specified in the code. Iterates through all slides in the powerpoint, but a slide will only be changed if the current layout name matches any layout name in the new Master.
 
 - **ReplaceOldDesign2.bas**
-Replaces the layout of a slide to the layout of the specified Slide Master which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
+Replaces the layout of a slide to the layout of the new Slide Master which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
 
 ## Useful Flows
 
