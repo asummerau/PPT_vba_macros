@@ -32,7 +32,7 @@ List all Slide Masters used in the PowerPoint and prints for each Slide Master t
     -----END-------
     ```
 - **SlideAnalysis2.bas**
-Lists all unique Slide Designs and counts how often each Design Layout was imported. (e.g. If you dec contains `"23_Blue_theme"`, `"22_Blue_theme"`, and `"Blue_theme"`, the output will tell you you have `"Blue_theme"` 3x imported).
+Lists all unique Slide Masters used in the PowerPoint and counts how often the same Slide Master was imported. (e.g. If it contains `"23_Blue_theme"`, `"22_Blue_theme"`, and `"Blue_theme"`, the output will tell you you have `"Blue_theme"` 3x imported).
 
     <ins>Output</ins>:
     ```
