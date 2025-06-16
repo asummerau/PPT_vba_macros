@@ -16,7 +16,7 @@ Removes all hidden slides from the presentation.
 Updates the year in the PowerPoint footer to match the current year (currently 2025).
 
 - **SlideAnalysis.bas**
-Generates a list of Master names and the associated slides using layouts from the corresponding Master.
+List all Slide Masters used in the PowerPoint and prints for each Slide Master the slides which are using layouts from the corresponding Master.
 
     <ins>Output</ins>:
     ```
