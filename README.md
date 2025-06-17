@@ -71,7 +71,7 @@ A Master (and all its layouts) is only removed if none of its layouts is used in
 Replaces the layout of a slide with the layout of the new Slide Master which has to be specified in the code. Iterates through all slides in the powerpoint, but a slide will only be changed if the current layout name matches any layout name in the new Master.
 
 - **ReplaceOldDesign2.bas**
-Replaces the layout of a slide with the layout of the new Slide Master which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
+Replaces the layout of a slide (from a specified old Slide Master) with the layout of the new Slide Master which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
 
 ## Useful Flows
 
