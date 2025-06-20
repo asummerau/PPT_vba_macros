@@ -19,8 +19,8 @@ Sub ReplaceOldDesign2()
     Dim nItems As Integer
     Dim layoutMapping() As String
 
-    ' TODO: Specify number of mappings you want to use
-    nItems = 89
+ ' TODO: Specify number of mappings you want to use
+    nItems = 90
     ReDim layoutMapping(0 To nItems, 0 To 1)
 
     ' TODO: fill in the Slide Master Names and update the number of mappings
@@ -47,10 +47,10 @@ Sub ReplaceOldDesign2()
         Set newDesign = Nothing
         Set newLayouts = Nothing
         For i = .Designs.Count To 1 Step -1
-            layoutname = Trim(.Designs(i).Name)
-            layoutName = GetCanonicalName(layoutname)
+            layoutName = Trim(.Designs(i).Name)
+            layoutName = GetCanonicalName(layoutName)
 
-            If layoutname = newDesignName Then
+            If layoutName = newDesignName Then
                 ' Debug.Print "Found new design: " & .Designs(i).Name
                 Set newDesign = .Designs(i)
                 Set newLayouts = .Designs(i).SlideMaster.CustomLayouts
