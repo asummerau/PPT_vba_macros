@@ -18,7 +18,6 @@ Sub ReplaceOldDesign2()
     Dim currentLayouts As CustomLayouts
     Dim nItems As Integer
     Dim layoutMapping() As String
-    Dim underscorePos As Integer
 
     ' TODO: Specify number of mappings you want to use
     nItems = 89
@@ -49,13 +48,8 @@ Sub ReplaceOldDesign2()
         Set newLayouts = Nothing
         For i = .Designs.Count To 1 Step -1
             layoutname = Trim(.Designs(i).Name)
-            underscorePos = InStr(layoutName, "_")
-            If underscorePos > 1 Then
-                If IsNumeric(Left(layoutName, underscorePos - 1)) Then
-                    layoutName = Mid(layoutName, underscorePos + 1)
-                End If
-            End If
-    
+            layoutName = GetCanonicalName(layoutname)
+
             If layoutname = newDesignName Then
                 ' Debug.Print "Found new design: " & .Designs(i).Name
                 Set newDesign = .Designs(i)
@@ -77,24 +71,14 @@ Sub ReplaceOldDesign2()
             foundNewLayout = False
             foundOldLayout = False
 
-            underscorePos = InStr(designName, "_")
-            If underscorePos > 1 Then
-                If IsNumeric(Left(designName, underscorePos - 1)) Then
-                    designName = Mid(designName, underscorePos + 1)
-                End If
-            End If
+            designName = GetCanonicalName(designName)
 
             If designName = oldDesignName Then
                 Debug.Print "--> Find repalcement for: " & layoutName
                 ' Check if a mapping exists in the predefined array
 
                 ' there are tons of duplicate layouts that start with a prefix (e.g. 1_title is the same as title)
-                underscorePos = InStr(layoutName, "_")
-                If underscorePos > 1 Then
-                    If IsNumeric(Left(layoutName, underscorePos - 1)) Then
-                        layoutName = Mid(layoutName, underscorePos + 1)
-                    End If
-                End If
+                layoutName = GetCanonicalName(layoutName)
 
                 For j = 1 To nItems
                     If foundNewLayout Then Exit For
@@ -136,3 +120,17 @@ Sub ReplaceOldDesign2()
     MsgBox "Design replacement complete!", vbInformation
 End Sub
 
+Function GetCanonicalName(name As String) As String
+    ' If name has a prefix, remove it (e.g. "23_name" -> "name")
+    Dim underscorePos As Integer
+    underscorePos = InStr(name, "_")
+    If underscorePos > 1 Then 
+        If IsNumeric(Left(name, underscorePos - 1)) Then
+            GetCanonicalName = Mid(name, underscorePos + 1)
+        Else
+            GetCanonicalName = name
+        End If
+    Else
+        GetCanonicalName = name
+    End If
+End Function
