@@ -89,8 +89,7 @@ Sub ReplaceOldDesign2()
                         For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
                                 
-                                'Debug.Print "--> Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
-                                sld.Design = newLayout.Design
+                                Debug.Print "--> Layout '" & layoutName & "' replaced with '" & newLayout.name & "'"
                                 sld.CustomLayout = newLayout
                                 foundNewLayout = True
                                 Exit For
