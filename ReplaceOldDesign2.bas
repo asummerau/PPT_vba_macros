@@ -21,7 +21,7 @@ Sub ReplaceOldDesign2()
     Dim underscorePos As Integer
 
     ' TODO: Specify number of mappings you want to use
-    nItems = 87
+    nItems = 89
     ReDim layoutMapping(0 To nItems, 0 To 1)
 
     ' TODO: fill in the Slide Master Names and update the number of mappings
@@ -50,10 +50,12 @@ Sub ReplaceOldDesign2()
         For i = .Designs.Count To 1 Step -1
             layoutname = Trim(.Designs(i).Name)
             underscorePos = InStr(layoutName, "_")
-            If underscorePos > 1 And IsNumeric(Left(i, underscorePos - 1)) Then
-                layoutName = Mid(layoutName, underscorePos + 1)
+            If underscorePos > 1 Then
+                If IsNumeric(Left(layoutName, underscorePos - 1)) Then
+                    layoutName = Mid(layoutName, underscorePos + 1)
+                End If
             End If
-
+    
             If layoutname = newDesignName Then
                 ' Debug.Print "Found new design: " & .Designs(i).Name
                 Set newDesign = .Designs(i)
@@ -76,8 +78,10 @@ Sub ReplaceOldDesign2()
             foundOldLayout = False
 
             underscorePos = InStr(designName, "_")
-            If underscorePos > 1 And IsNumeric(Left(i, underscorePos - 1)) Then
-                designName = Mid(designName, underscorePos + 1)
+            If underscorePos > 1 Then
+                If IsNumeric(Left(designName, underscorePos - 1)) Then
+                    designName = Mid(designName, underscorePos + 1)
+                End If
             End If
 
             If designName = oldDesignName Then
@@ -86,8 +90,10 @@ Sub ReplaceOldDesign2()
 
                 ' there are tons of duplicate layouts that start with a prefix (e.g. 1_title is the same as title)
                 underscorePos = InStr(layoutName, "_")
-                If underscorePos > 1 And IsNumeric(Left(layoutName, underscorePos - 1)) Then
-                    layoutName = Mid(layoutName, underscorePos + 1)
+                If underscorePos > 1 Then
+                    If IsNumeric(Left(layoutName, underscorePos - 1)) Then
+                        layoutName = Mid(layoutName, underscorePos + 1)
+                    End If
                 End If
 
                 For j = 1 To nItems
