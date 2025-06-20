@@ -74,7 +74,7 @@ Sub ReplaceOldDesign2()
             designName = GetCanonicalName(designName)
 
             If designName = oldDesignName Then
-                Debug.Print "--> Find repalcement for: " & layoutName
+                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Find replacement for Layout '" & layoutName & "'"
                 ' Check if a mapping exists in the predefined array
 
                 ' there are tons of duplicate layouts that start with a prefix (e.g. 1_title is the same as title)
@@ -89,7 +89,7 @@ Sub ReplaceOldDesign2()
                         For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
                                 
-                                'Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
+                                'Debug.Print "--> Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
                                 sld.Design = newLayout.Design
                                 sld.CustomLayout = newLayout
                                 foundNewLayout = True
