@@ -13,10 +13,10 @@ Sub Printalllayouts()
     Debug.Print "-----START-----"
 
     With oPres
-        ' TODO: Add here the name of the new design
-        myDesignName = "DESIGN NAME"
-
-        ' STEP 1: Find the new design in the presentation
+        
+        ' === STEP 1: Set your desired master name ===
+        myDesignName = "Cisco Light 05-12-2025"
+        ' === STEP 2: Try to find that design ===
         Set myDesign = Nothing
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
@@ -28,10 +28,11 @@ Sub Printalllayouts()
         Next i
         
         If myDesign Is Nothing Then
-            MsgBox "New design '" & myDesignName & "' not found in the presentation.", vbExclamation
+        MsgBox "Master design '" & myDesignName & "' not found.", vbExclamation
             Exit Sub
         End If
 
+        ' === STEP 3: Collect layout names ===
         For Each layout In myDesign.SlideMaster.CustomLayouts
             Debug.Print layout.Name
         Next layout
