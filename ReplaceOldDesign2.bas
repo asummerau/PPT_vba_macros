@@ -1,7 +1,7 @@
 
-' ReplaceOldDesign2: Replaces the layout of a ppt slide to a new layout from the new Master Design.
-' based on a predefined set of mappings.
-' NOTE: this code may mess up your presentation.
+' ReplaceOldDesign2: Replaces the layout of a slide (from a specified old Slide Master) with the layout of the new Slide Master which has to be specified in the code. 
+' This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
+' NOTE: this code may mess up your presentation. Only apply on a copy of your presentation!
 Sub ReplaceOldDesign2()
     Dim oPres As Presentation
     Dim sld As Slide
@@ -21,7 +21,7 @@ Sub ReplaceOldDesign2()
     Dim underscorePos As Integer
 
     ' TODO: Specify number of mappings you want to use
-    nItems = 20
+    nItems = 87
     ReDim layoutMapping(0 To nItems, 0 To 1)
 
     ' TODO: fill in the Slide Master Names and update the number of mappings
@@ -99,7 +99,7 @@ Sub ReplaceOldDesign2()
                         For Each newLayout In newLayouts
                             If Trim(newLayout.Name) = Trim(layoutMapping(j, 1)) Then
                                 
-                                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
+                                'Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Layout '" & layoutName & "' replaced with '" & newLayout.Name & "'"
                                 sld.Design = newLayout.Design
                                 sld.CustomLayout = newLayout
                                 foundNewLayout = True
