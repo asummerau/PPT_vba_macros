@@ -1,7 +1,7 @@
 
-' ReplaceOldDesign: Replace old design in PowerPoint presentation with a new design.
-' This macro replaces the old designs in the slides only if the layout names match. If a matching layout is not found, it skips that slide and logs a warning.
-' NOTE: this code may mess up your presentation.
+' ReplaceOldDesign: Replaces the layout of a slide with the layout of the new Slide Master which has to be specified in the code. 
+' Iterates through all slides in the powerpoint, but a slide will only be changed if the current layout name matches any layout name in the new Master. If a matching layout is not found, it skips that slide and logs a warning.
+' NOTE: this code may mess up your presentation. Only apply on a copy of your presentation!
 Sub ReplaceOldDesign()
     Dim oPres As Presentation
     Dim sld As Slide
