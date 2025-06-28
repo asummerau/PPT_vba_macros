@@ -44,7 +44,7 @@ Sub NormalizeSlideDesigns()
             If foundIndex > 0 Then
                 nameCountArray(foundIndex) = nameCountArray(foundIndex) + 1
                 ' If original name is non-normalized, and current designName is normalized, update the original name
-                If designName = normalizedName And origNameArray(foundIndex) <> designName Then
+                If designName = normalizedName And origNameArray(foundIndex) <> normalizedName Then
                     origNameArray(foundIndex) = designName
                     Set designRefArray(foundIndex) = design
                 End If
