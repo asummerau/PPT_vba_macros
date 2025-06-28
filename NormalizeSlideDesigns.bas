@@ -26,7 +26,7 @@ Sub NormalizeSlideDesigns()
     ' STEP 1: Build list of normalized design names and count usage
     On Error Resume Next
     With oPres
-        ' (e.g. "23_Blue_theme", "Blue_theme", "1_Green_theme", "2_Green_theme")
+        ' (e.g. "23_Blue_theme", "Blue_theme", "1_Green_theme", "2_Green_theme", "2_Red_theme")
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
             designName = .Designs(i).SlideMaster.Design.Name
@@ -70,10 +70,10 @@ Sub NormalizeSlideDesigns()
 
         Next i
         ' Output will be 
-        ' normalizedNameArray=("Blue_theme", "Green_theme")
-        ' origNameArray=("Blue_theme", "1_Green_theme")
-        ' nameCountArray=(2, 2)
-        ' designRefArray=(Design("Blue_theme"), Design("1_Green_theme"))
+        ' normalizedNameArray=("Blue_theme", "Green_theme", "Red_theme")
+        ' origNameArray=("Blue_theme", "1_Green_theme", "2_Red_theme")
+        ' nameCountArray=(2, 2, 1)
+        ' designRefArray=(Design("Blue_theme"), Design("1_Green_theme"), Design("2_Red_theme"))
 
         ' STEP 2: Go through slides and update layout if better matching design exists
         For Each sld In oPres.Slides
