@@ -11,13 +11,13 @@ Sub NormalizeSlideDesigns()
     Dim normDesignName As String
     Dim normLayoutName As String
     Dim foundIndex As Long
-    Dim normalizedNameArray() As String
+    Dim normNameArray() As String
     Dim nameCountArray() As Long
-    Dim origNameArray() As String
+    Dim nameArray() As String
     Dim designRefArray() As Design
 
-    ReDim normalizedNameArray(1 To 1)
-    ReDim origNameArray(1 To 1)
+    ReDim normNameArray(1 To 1)
+    ReDim nameArray(1 To 1)
     ReDim nameCountArray(1 To 1)
     ReDim designRefArray(1 To 1)
 
@@ -34,8 +34,8 @@ Sub NormalizeSlideDesigns()
 
             ' Check if the normalized name has been added before
             foundIndex = 0
-            For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
-                If normalizedNameArray(j) = normDesignName Then
+            For j = LBound(normNameArray) To UBound(normNameArray)
+                If normNameArray(j) = normDesignName Then
                     foundIndex = j
                     Exit For
                 End If
@@ -44,37 +44,37 @@ Sub NormalizeSlideDesigns()
             If foundIndex > 0 Then
                 nameCountArray(foundIndex) = nameCountArray(foundIndex) + 1
                 ' If original name is non-normalized, and current designName is normalized, update the original name
-                If designName = normDesignName And origNameArray(foundIndex) <> normDesignName Then
-                    origNameArray(foundIndex) = designName
+                If designName = normDesignName And nameArray(foundIndex) <> normDesignName Then
+                    nameArray(foundIndex) = designName
                     Set designRefArray(foundIndex) = design
                 End If
             Else
                 ' Add new entry
-                If normalizedNameArray(1) = "" Then
-                    normalizedNameArray(1) = normDesignName
+                If normNameArray(1) = "" Then
+                    normNameArray(1) = normDesignName
                     nameCountArray(1) = 1
-                    origNameArray(1) = designName
+                    nameArray(1) = designName
                     Set designRefArray(1) = design
                 Else
-                    ReDim Preserve normalizedNameArray(1 To UBound(normalizedNameArray) + 1)
+                    ReDim Preserve normNameArray(1 To UBound(normNameArray) + 1)
                     ReDim Preserve nameCountArray(1 To UBound(nameCountArray) + 1)
-                    ReDim Preserve origNameArray(1 To UBound(origNameArray) + 1)
+                    ReDim Preserve nameArray(1 To UBound(nameArray) + 1)
                     ReDim Preserve designRefArray(1 To UBound(designRefArray) + 1)
 
-                    normalizedNameArray(UBound(normalizedNameArray)) = normDesignName
+                    normNameArray(UBound(normNameArray)) = normDesignName
                     nameCountArray(UBound(nameCountArray)) = 1
-                    origNameArray(UBound(origNameArray)) = designName
+                    nameArray(UBound(nameArray)) = designName
                     Set designRefArray(UBound(designRefArray)) = design
                 End If
             End If
 
         Next i
         ' Output will be 
-        ' normalizedNameArray=("Blue_theme", "Green_theme", "Red_theme")
-        ' origNameArray=("Blue_theme", "1_Green_theme", "2_Red_theme")
+        ' normNameArray=("Blue_theme", "Green_theme", "Red_theme")
+        ' nameArray=("Blue_theme", "1_Green_theme", "2_Red_theme")
         ' nameCountArray=(2, 2, 1)
         ' designRefArray=(Design("Blue_theme"), Design("1_Green_theme"), Design("2_Red_theme"))
-        ' --> designRefArray(j).Name == origNameArray(j), for all j
+        ' --> designRefArray(j).Name == nameArray(j), for all j
 
         ' STEP 2: Go through slides and update layout if better matching design exists
         For Each sld In oPres.Slides
@@ -83,14 +83,14 @@ Sub NormalizeSlideDesigns()
             normDesignName = GetCanonicalName(designName)
             normLayoutName = GetCanonicalName(layoutName)
 
-            ' if the current design is already normalized, skip it
+            ' if the current design is already using the normalized design, skip it
             If normDesignName = designName Then
                 Debug.Print "Slide " & sld.SlideIndex & " already uses normalized design: " & designName
                 GoTo NextSlide
             Else
             ' else find canonical design with the same normalized name
-                For j = LBound(normalizedNameArray) To UBound(normalizedNameArray)
-                    If normalizedNameArray(j) = normDesignName Then 'and 'nomlizedNameArray(j) <> designName (given from above)
+                For j = LBound(normNameArray) To UBound(normNameArray)
+                    If normNameArray(j) = normDesignName Then 'and 'nomlizedNameArray(j) <> designName (given from above)
                         ' verify that the design of the slide does not match the canonical design (should already be a given)
                         If Not sld.design.Name = designRefArray(j).Name Then
 
@@ -117,10 +117,6 @@ Sub NormalizeSlideDesigns()
                                 Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normLayoutName & "' in new master, skipping."
                                 ' sld.design = designRefArray(j) -> This line not only copies over this layout but also all other layouts from the old design
                             End If
-                            
-                        Else
-                            Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
-                        
                         End If
                         Exit For
                     End If
