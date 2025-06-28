@@ -9,7 +9,7 @@ Sub NormalizeSlideDesigns()
     Dim i As Integer, j As Integer
     Dim designName As String
     Dim normDesignName As String
-    Dim normalizedLayoutName As String
+    Dim normLayoutName As String
     Dim foundIndex As Long
     Dim normalizedNameArray() As String
     Dim nameCountArray() As Long
@@ -81,7 +81,7 @@ Sub NormalizeSlideDesigns()
             layoutName = Trim(sld.CustomLayout.Name)
             designName = Trim(sld.Design.Name)
             normDesignName = GetCanonicalName(designName)
-            normalizedLayoutName = GetCanonicalName(layoutName)
+            normLayoutName = GetCanonicalName(layoutName)
 
             ' if the current design is already normalized, skip it
             If normDesignName = designName Then
@@ -103,7 +103,7 @@ Sub NormalizeSlideDesigns()
                             For Each newLayout In designRefArray(j).SlideMaster.CustomLayouts
                                 Dim temp As String
                                 temp = GetCanonicalName(newLayout.Name)
-                                If temp = normalizedLayoutName Then
+                                If temp = normLayoutName Then
                                     Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
                                     foundLayout = True
 
@@ -114,7 +114,7 @@ Sub NormalizeSlideDesigns()
                             Next newLayout
 
                             If Not foundLayout Then
-                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normalizedLayoutName & "' in new master, skipping."
+                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normLayoutName & "' in new master, skipping."
                                 ' sld.design = designRefArray(j) -> This line not only copies over this layout but also all other layouts from the old design
                             End If
                             
