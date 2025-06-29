@@ -94,9 +94,11 @@ You want to move your slides from an existing Slide Master (e.g. `"Blue_theme_20
 #### Solution:
 Run the following scripts in this order:
 
-1. Run **SlideAnalysis2.bas** to verify that all Slide Master in your deck are imported only once. If not, go to Problem 1.
+1. Import your new Slide Master (e.g. copy over a slide to the deck).
 
-2. Depending on layout name matching:
+2. Run **SlideAnalysis2.bas** to verify that all Slide Master in your deck are imported only once. If not, go to Problem 1. 
+
+3. Depending on layout name matching:
     - If you expect the layouts to be named the same, run `ReplaceOldDesign.bas`
     - If the layouts are named differently, you need to do a mapping of the old layout to the new layout (e.g., `Heading` from `"Blue_theme_2024"` becomes `Title` from `"Blue_theme_2025"`), paste this in `ReplaceOldDesign2.bas` before running it.
       ```vb
@@ -108,9 +110,9 @@ Run the following scripts in this order:
 
       ...
       ```
-3. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
-4. Run **SlideMasterCleanup.bas** ro remove the old Slide Master `"Blue_theme_2024"`
-5. Run **SlideAnalysis2.bas** again, to verify.
+4. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
+5. Run **SlideMasterCleanup.bas** ro remove the old Slide Master `"Blue_theme_2024"`
+6. Run **SlideAnalysis2.bas** again, to verify.
 
 
 ## Disclaimer
