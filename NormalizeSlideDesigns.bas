@@ -26,7 +26,7 @@ Sub NormalizeSlideDesigns()
     ' STEP 1: Build list of normalized design names and count usage
     On Error Resume Next
     With oPres
-        ' (e.g. "23_Blue_theme", "Blue_theme", "1_Green_theme", "2_Green_theme", "2_Red_theme")
+        ' (e.g. "23_Blue_theme", "Blue_theme", "1_Green_theme", "2_Green_theme", "2_Red_theme", "Black_theme")
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
             designName = .Designs(i).Name
@@ -70,10 +70,10 @@ Sub NormalizeSlideDesigns()
 
         Next i
         ' Output will be 
-        ' normNameArray=("Blue_theme", "Green_theme", "Red_theme")
-        ' nameArray=("Blue_theme", "1_Green_theme", "2_Red_theme")
-        ' nameCountArray=(2, 2, 1)
-        ' designRefArray=(Design("Blue_theme"), Design("1_Green_theme"), Design("2_Red_theme"))
+        ' normNameArray=("Blue_theme", "Green_theme", "Red_theme", "Black_theme")
+        ' nameArray=("Blue_theme", "1_Green_theme", "2_Red_theme", "Black_theme")
+        ' nameCountArray=(2, 2, 1, 1)
+        ' designRefArray=(Design("Blue_theme"), Design("1_Green_theme"), Design("2_Red_theme"), Design("Black_theme"))
         ' --> designRefArray(j).Name == nameArray(j), for all j
 
         ' STEP 2: Go through slides and update layout if better matching design exists
@@ -88,12 +88,16 @@ Sub NormalizeSlideDesigns()
                 Debug.Print "Slide " & sld.SlideIndex & " already uses normalized design: " & designName
                 GoTo NextSlide
             Else
-            ' else find canonical design with the same normalized name
+            ' else find canonical design with the same normalized name (bc designName has a prefix like "23_", "22_", etc.)
                 For j = LBound(normNameArray) To UBound(normNameArray)
-                    If normNameArray(j) = normDesignName Then 'and 'nomlizedNameArray(j) <> designName (given from above)
-                        ' verify that the design of the slide does not match the canonical design (should already be a given)
-                        If Not sld.design.Name = designRefArray(j).Name Then
-
+                    If normNameArray(j) = normDesignName Then                         
+                        ' no need to replace design because even though it has a prefix, there was not normalized design in the presentation
+                        ' (e.g. keep "1_Green_theme" -> "1_Green_theme")
+                        If designName = nameArray(j) Then 
+                            Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                        
+                        'if designName <> nameArray(j) --> replace with nameArray(j)'s design (e.g replace "23_Blue_theme" with "Blue_theme")
+                        Else 
                             ' Try to find matching layout by name
                             Dim newLayout As CustomLayout
                             Dim foundLayout As Boolean
