@@ -23,8 +23,8 @@ Sub Printalllayouts()
     With oPres
         
         ' === STEP 1: Set your desired master name ===
-        myDesignName = "Blue theme 2015 16x9" ' <-- Replace this with your actual master name
-        shouldExportToFile = True ' Set to True if you want to export to file
+        myDesignName = "DESIGN NAME" ' <-- Replace this with your actual master name
+        shouldExportToFile = False ' Set to True if you want to export to file
         oldOrNew = "new" ' Set to "old" if you want to use the old design name
 
         ' === STEP 2: Try to find that design ===
