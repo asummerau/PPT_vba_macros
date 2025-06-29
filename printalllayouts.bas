@@ -12,6 +12,7 @@ Sub Printalllayouts()
     Dim fNum As Integer
     Dim i As Integer
     Dim shouldExportToFile As Boolean
+    Dim oldOrNew As String
 
     Set oPres = ActivePresentation
     layoutNames = ""
@@ -22,8 +23,9 @@ Sub Printalllayouts()
     With oPres
         
         ' === STEP 1: Set your desired master name ===
-        myDesignName = "MASTER DESIGN NAME HERE" ' <-- Replace this with your actual master name
-        shouldExportToFile = False ' Set to True if you want to export to file
+        myDesignName = "Blue theme 2015 16x9" ' <-- Replace this with your actual master name
+        shouldExportToFile = True ' Set to True if you want to export to file
+        oldOrNew = "new" ' Set to "old" if you want to use the old design name
 
         ' === STEP 2: Try to find that design ===
         Set myDesign = Nothing
@@ -42,11 +44,24 @@ Sub Printalllayouts()
         End If
 
         ' === STEP 3: Collect layout names ===
-        layoutNames = "Design: " & myDesign.Name & vbCrLf
-        For Each layout In myDesign.SlideMaster.CustomLayouts
+        if oldOrNew  = "old" Then
+            layoutNames = "layoutMapping(0, 0) = " & myDesign.Name & vbCrLf
+        Else
+            layoutNames = "layoutMapping(0, 1) = " & myDesign.Name & vbCrLf
+        End If
+        Dim j As Integer
+        Dim numLayouts As Integer
+        numLayouts = myDesign.SlideMaster.CustomLayouts.Count
+
+        For j = 1 To numLayouts
+            Set layout = myDesign.SlideMaster.CustomLayouts(j)
             Debug.Print layout.Name
-            layoutNames = layoutNames & "  - Layout: " & layout.Name & vbCrLf
-        Next layout
+            if oldOrNew  = "old" Then
+                layoutNames = layoutNames & "layoutMapping(" & j & ", 0) = " & layout.Name & vbCrLf
+            Else
+                layoutNames = layoutNames & "layoutMapping(" & j & ", 1) = " & layout.Name & vbCrLf
+            End If
+        Next j
 
     If shouldExportToFile Then
         ' === STEP 4: Set output file path on Mac Desktop ===
