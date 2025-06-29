@@ -111,7 +111,7 @@ Run the following scripts in this order:
       ...
       ```
 4. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
-5. Run **SlideMasterCleanup.bas** ro remove the old Slide Master `"Blue_theme_2024"`
+5. Run **SlideMasterCleanup.bas** to remove the old Slide Master `"Blue_theme_2024"`
 6. Run **SlideAnalysis2.bas** again, to verify.
 
 
