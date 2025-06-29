@@ -75,10 +75,10 @@ Replaces the layout of a slide (from a specified old Slide Master) with the layo
 
 ## Useful Flows
 
-### Problem:
+### Problem 1:
 You have **duplicate Slide Masters** (e.g. `"23_Blue_theme"`, `"22_Blue_theme"`, `"Blue_theme"`), and you want to consolidate your presentation so that only one Master is used.
 
-### Solution:
+#### Solution:
 Run the following scripts in this order:
 
 1. **SlideAnalysis**
@@ -87,6 +87,32 @@ Run the following scripts in this order:
 4. **SlideMasterCleanup**
 5. **SlideAnalysis** (again, to verify)
 6. **SlideAnalysis2** (again, to verify)
+
+### Problem 2
+You want to move your slides from an existing Slide Master (e.g. `"Blue_theme_2024"`) to a new Slide master (e.g. `"Blue_theme_2025"`).
+
+#### Solution:
+Run the following scripts in this order:
+
+1. Run **SlideAnalysis2.bas** to verify that all Slide Master in your deck are imported only once. If not, go to Problem 1.
+
+2. Depending on layout name matching:
+    - If you expect the layouts to be named the same, run `ReplaceOldDesign.bas`
+    - If the layouts are named differently, you need to do a mapping of the old layout to the new layout (e.g., `Heading` from `"Blue_theme_2024"` becomes `Title` from `"Blue_theme_2025"`), paste this in `ReplaceOldDesign2.bas` before running it.
+      ```vb
+      layoutMapping(0, 0) = "Blue_theme_2024" 'Old Slide Master
+      layoutMapping(0, 1) = "Blue_theme_2025" 'New Slide Master
+
+      layoutMapping(1, 0)= "Heading"
+      layoutMapping(1, 1)= "Title"
+
+      ...
+      ```
+3. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
+4. Run **SlideMasterCleanup.bas** ro remove the old Slide Master `"Blue_theme_2024"`
+5. Run **SlideAnalysis2.bas** again, to verify.
+
+
 ## Disclaimer
 
 These macros were tested on **PowerPoint for MacOS**.  
