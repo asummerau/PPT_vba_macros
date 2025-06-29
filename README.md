@@ -75,7 +75,7 @@ Replaces the layout of a slide (from a specified old Slide Master) with the layo
 
 ## Useful Flows
 
-### Problem 1:
+### Problem 1
 You have **duplicate Slide Masters** (e.g. `"23_Blue_theme"`, `"22_Blue_theme"`, `"Blue_theme"`), and you want to consolidate your presentation so that only one Master is used.
 
 #### Solution:
@@ -87,7 +87,7 @@ Run the following scripts in this order:
 4. **SlideMasterCleanup**
 5. **SlideAnalysis** (again, to verify)
 6. **SlideAnalysis2** (again, to verify)
-
+---
 ### Problem 2
 You want to move your slides from an existing Slide Master (e.g. `"Blue_theme_2024"`) to a new Slide master (e.g. `"Blue_theme_2025"`).
 
