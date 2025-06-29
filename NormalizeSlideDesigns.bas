@@ -118,7 +118,7 @@ Sub NormalizeSlideDesigns()
                             Next newLayout
 
                             If Not foundLayout Then
-                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normLayoutName & "' in new master, copying the layout to it."
+                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find layout '" & normLayoutName & "' in " & designRefArray(j).Name & ", copying the layout to it."
                                 ' sld.design = designRefArray(j) -> This line not only copies over this layout but also all other layouts from the old design
                             
                                 ' Trick: Create a temporary slide using the original layout, then assign normalized master to it
