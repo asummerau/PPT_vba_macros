@@ -105,9 +105,9 @@ Sub NormalizeSlideDesigns()
 
                             ' Check if the layout name matches any layout in the new design
                             For Each newLayout In designRefArray(j).SlideMaster.CustomLayouts
-                                Dim temp As String
-                                temp = GetCanonicalName(newLayout.Name)
-                                If temp = normLayoutName Then
+                                Dim normNewLayoutName As String
+                                normNewLayoutName = GetCanonicalName(newLayout.Name)
+                                If normNewLayoutName = normLayoutName Then
                                     Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
                                     foundLayout = True
 
