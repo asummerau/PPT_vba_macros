@@ -118,9 +118,23 @@ Sub NormalizeSlideDesigns()
                             Next newLayout
 
                             If Not foundLayout Then
-                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normLayoutName & "' in new master, skipping."
+                                Debug.Print "WARNING: Slide " & sld.SlideIndex & " Could not find matching layout '" & normLayoutName & "' in new master, copying the layout to it."
                                 ' sld.design = designRefArray(j) -> This line not only copies over this layout but also all other layouts from the old design
-                            End If
+                            
+                                ' Trick: Create a temporary slide using the original layout, then assign normalized master to it
+                                Dim tempSlide As Slide
+                                Set tempSlide = oPres.Slides.Add(oPres.Slides.Count + 1, ppLayoutBlank)
+                                tempSlide.CustomLayout = sld.CustomLayout
+
+                                ' This assigns the new master, which auto-imports the necessary layout
+                                tempSlide.Design = designRefArray(j)
+
+                                ' Use the imported layout on the original slide
+                                sld.CustomLayout = tempSlide.CustomLayout                                       
+                                
+                                ' Remove the temp slide after use
+                                tempSlide.Delete                            
+                                End If
                         End If
                         Exit For
                     End If
