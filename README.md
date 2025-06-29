@@ -87,7 +87,7 @@ Run the following scripts in this order:
 4. **SlideMasterCleanup**
 5. **SlideAnalysis** (again, to verify)
 6. **SlideAnalysis2** (again, to verify)
----
+
 ### Problem 2
 You want to move your slides from an existing Slide Master (e.g. `"Blue_theme_2024"`) to a new Slide master (e.g. `"Blue_theme_2025"`).
 
