@@ -110,7 +110,7 @@ Run the following scripts in this order:
 
       ...
       ```
-      Hint: you can use **Printalllayouts.bas** to print the layout names for both Slide Masters. If you choose to print to .txt it will already give you the format of `layoutMapping(0, i)= "layout_name"`, or `layoutMapping(1, i)= "layout_name"` for all i. 
+      Hint: you can use **Printalllayouts.bas** to print the layout names for both Slide Masters. If you choose to print to .txt it will already give you the format of `layoutMapping(0, i) =` *"layout_name"*, or `layoutMapping(1, i) =` *"layout_name"*, for all i. 
 
 4. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
 5. Run **SlideMasterCleanup.bas** to remove the old Slide Master `"Blue_theme_2024"`
