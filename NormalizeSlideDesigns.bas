@@ -94,7 +94,7 @@ Sub NormalizeSlideDesigns()
                         ' no need to replace design because even though it has a prefix, there was not normalized design in the presentation
                         ' (e.g. keep "1_Green_theme" -> "1_Green_theme")
                         If designName = nameArray(j) Then 
-                            Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                            Debug.Print "No need to update Slide " & sld.SlideIndex & ": from '" & designName & "' to '" & designRefArray(j).Name & "'"
                         
                         'if designName <> nameArray(j) --> replace with nameArray(j)'s design (e.g replace "23_Blue_theme" with "Blue_theme")
                         Else 
@@ -108,7 +108,7 @@ Sub NormalizeSlideDesigns()
                                 Dim normNewLayoutName As String
                                 normNewLayoutName = GetCanonicalName(newLayout.Name)
                                 If normNewLayoutName = normLayoutName Then
-                                    Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & sld.design.Name & "' to '" & designRefArray(j).Name & "'"
+                                    Debug.Print "+++Updating Slide " & sld.SlideIndex & ": from '" & designName & "' to '" & designRefArray(j).Name & "'"
                                     foundLayout = True
 
                                     sld.CustomLayout = newLayout
