@@ -28,11 +28,7 @@ Sub SlideMasterAnalysis2()
             underscorePos = InStr(designName, "_")
 
             ' Remove number prefix and underscore if present (e.g. "23_Blue_theme" -> "Blue_theme")
-            If underscorePos > 1 And IsNumeric(Left(designName, underscorePos - 1)) Then
-                normalizedName = Mid(designName, underscorePos + 1)
-            Else
-                normalizedName = designName
-            End If
+            normalizedName = GetCanonicalName(designName)
 
             ' Debug.Print "Design Name: " & designName
             ' Debug.Print "Normalized Name: " & normalizedName
@@ -90,3 +86,18 @@ Sub SlideMasterAnalysis2()
     MsgBox "Finished!"
     
 End Sub
+
+Function GetCanonicalName(name As String) As String
+    ' If name has a prefix, remove it (e.g. "23_name" -> "name")
+    Dim underscorePos As Integer
+    underscorePos = InStr(name, "_")
+    If underscorePos > 1 Then 
+        If IsNumeric(Left(name, underscorePos - 1)) Then
+            GetCanonicalName = Mid(name, underscorePos + 1)
+        Else
+            GetCanonicalName = name
+        End If
+    Else
+        GetCanonicalName = name
+    End If
+End Function
