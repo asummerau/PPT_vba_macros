@@ -25,7 +25,8 @@ Sub Printalllayouts()
         ' === STEP 1: Set your desired master name ===
         myDesignName = "DESIGN NAME" ' <-- Replace this with your actual master name
         shouldExportToFile = False ' Set to True if you want to export to file
-        oldOrNew = "new" ' Set to "old" if you want to use the old design name
+        oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
+        fileName = myDesignName & "_PowerPoint_Layouts.txt" 
 
         ' === STEP 2: Try to find that design ===
         Set myDesign = Nothing
@@ -65,7 +66,6 @@ Sub Printalllayouts()
 
     If shouldExportToFile Then
         ' === STEP 4: Set output file path on Mac Desktop ===
-        fileName = "PowerPoint_Layouts.txt"
         outputFile = MacScript("return POSIX path of (path to desktop folder)") & fileName
 
         ' === STEP 5: Write to file ===
