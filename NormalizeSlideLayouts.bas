@@ -1,7 +1,14 @@
 'NormalizeSlideLayouts: This macro removes slide layouts that have been added over time. 
 ' Any slide that is using a non-official layout will be updated to use the official layout based on the mapping provided.
-
-' TODO: check scenario 2.2. 
+'
+' Strategy:
+' 1. Find all non-official layouts (layouts that come after the "lastLayoutName" in the target design)
+' 2. For each non-official layout:
+'    - Scenario 2.1: If it's a duplicate with prefix (e.g., "1_Title Slide"), try to use canonical layout ("Title Slide")
+'    - Scenario 2.2: If no canonical layout exists, use mapping table to find replacement layout
+' 3. Delete the non-official layout after moving all slides to official layouts
+'
+' TODO: Verify scenario 2.2 logic for imported layouts from other presentations
 Sub NormalizeSlideLayouts()
     Dim oPres As Presentation
     Dim targetDesign As Design
@@ -41,6 +48,8 @@ Sub NormalizeSlideLayouts()
         lastLayoutIndex = 0
         numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
 
+        ' STEP 2: Process each layout in the target design
+        ' Strategy: Find the lastLayoutIndex first, then process all layouts that come after it
         For j = 0 To numLayouts - 1
             Set layout = targetDesign.SlideMaster.CustomLayouts(j)
             layoutName = layout.Name
@@ -49,54 +58,73 @@ Sub NormalizeSlideLayouts()
                 lastLayoutIndex = j
             End If
 
+            ' Process non-official layouts (those that come after the last official layout)
             If lastLayoutIndex > 0 And layoutName <> lastLayoutName Then
                 Debug.Print "Non-official layout found: " & layoutName
 
-                ' 1. check if this slide was used in the presentation, if not delete it
-                ' 2. if it was used, move the slides to the official layout and delete the layout
-                ' 2.1. layout is imported from another presentation, check for the most similar layout
-                ' 2.2. layout is a duplicate, e.g., has a prefix, move the slides to the official layout and delete the layout
-            
                 Dim sld As Slide
                 Dim layoutWasUsed As Boolean
-                Dim foundLayout As Boolean
-
+                Dim foundMappingLayout As Boolean
+                Dim foundCanonicalLayout As Boolean
                 layoutWasUsed = False
-                ' replace all slides that are using this layout  
+
+                ' STEP 2a: Check all slides to see if they use this non-official layout
                 For Each sld In oPres.Slides                
                     If sld.CustomLayout.Name = layoutName Then
                         Debug.Print "-Non-official layout '" & layoutName & "' is currently being used by slide " & sld.SlideIndex & "."
                         layoutWasUsed = True
                         
-                        ' scenario 2.1.: find the new layout name based on the mapping
+                        ' SCENARIO 2.1: Try to find canonical layout (remove numeric prefix)
+                        ' Example: "1_Title Slide" becomes "Title Slide"
+                        Dim canonicalLayoutName As String
+                        Dim targetDesignLayout As CustomLayout
+                        canonicalLayoutName = GetCanonicalName(layoutName)
+                        foundCanonicalLayout = False
+                        
+                        ' Search for canonical layout in target design
+                        For Each targetDesignLayout In targetDesign.SlideMaster.CustomLayouts
+                            If targetDesignLayout.Name = canonicalLayoutName Then
+                                sld.CustomLayout = targetDesignLayout
+                                foundCanonicalLayout = True
+                                Debug.Print "-Moved slide """ & sld.SlideIndex & """ to canonical layout: " & canonicalLayoutName
+                                Exit For
+                            End If
+                        Next targetDesignLayout
+                        
+                        If foundCanonicalLayout Then
+                            GoTo NextSlide
+                        End If
+
+                        ' SCENARIO 2.2: Use mapping table to find replacement layout
+                        ' This handles layouts imported from other presentations
                         Dim newLayoutName As String
-                        newLayoutName = FindMapping(GetCanonicalName(layoutName))
+                        newLayoutName = FindMapping(canonicalLayoutName)
                         If newLayoutName = "" Then
                             MsgBox "Non-official layout '" & layoutName & "' not found in Mapping.", vbExclamation
                             Exit Sub
                         End If
 
-                        ' replace the slide layout with the new layout from the target design
-                        Dim targetDesignLayout As CustomLayout
-                        foundLayout = False
+                        ' Apply the mapped layout to the slide
+                        foundMappingLayout = False
                         For Each targetDesignLayout In targetDesign.SlideMaster.CustomLayouts
                             If targetDesignLayout.Name = newLayoutName Then
                                 sld.CustomLayout = targetDesignLayout
-                                foundLayout = True
+                                foundMappingLayout = True
                                 Debug.Print "-Moved slide """ & sld.SlideIndex & """ to new layout: " & newLayoutName
                                 Exit For
                             End If
                         Next targetDesignLayout
 
-                        If Not foundLayout Then
+                        If Not foundMappingLayout Then
                             MsgBox "Layout '" & newLayoutName & "' not found in TargetDesign.", vbExclamation
                             Exit Sub
                         End If
-                        
+
+NextSlide:
                     End If
                 Next sld
 
-                ' after having gone through all slides, delete the layout
+                ' STEP 3: Clean up - delete the non-official layout after processing all slides
                 If Not layoutWasUsed Then
                     Debug.Print "**Deleting unused non-official layout: " & layoutName
                     layout.Delete
@@ -109,8 +137,8 @@ Sub NormalizeSlideLayouts()
                     numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
                 End If
                 
-                if j > numLayouts - 1 Then
-                    'exit the for loop
+                ' Safety check: exit loop if we've processed all layouts
+                If j > numLayouts - 1 Then
                     Debug.Print "Exiting loop since we deleted the last layout."
                     Exit For
                 End If
