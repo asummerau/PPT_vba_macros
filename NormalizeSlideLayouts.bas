@@ -1,5 +1,7 @@
 'NormalizeSlideLayouts: This macro removes slide layouts that have been added over time. 
 ' Any slide that is using a non-official layout will be updated to use the official layout based on the mapping provided.
+
+' TODO: check scenario 2.2. 
 Sub NormalizeSlideLayouts()
     Dim oPres As Presentation
     Dim targetDesign As Design
@@ -7,6 +9,8 @@ Sub NormalizeSlideLayouts()
     Dim layoutName As String
     Dim lastLayoutName As String
     Dim lastLayoutIndex As Integer
+    Dim j As Integer
+    Dim numLayouts As Integer
 
     ' Modify this to your actual master name
     Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
@@ -35,11 +39,7 @@ Sub NormalizeSlideLayouts()
         End If
 
         lastLayoutIndex = 0
-        ' find the index of the layout called "Closing Midnight"
-        Dim j As Integer
-        Dim numLayouts As Integer
         numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
-
 
         For j = 0 To numLayouts - 1
             Set layout = targetDesign.SlideMaster.CustomLayouts(j)
@@ -67,8 +67,8 @@ Sub NormalizeSlideLayouts()
                     If sld.CustomLayout.Name = layoutName Then
                         Debug.Print "-Non-official layout '" & layoutName & "' is currently being used by slide " & sld.SlideIndex & "."
                         layoutWasUsed = True
-
-                        ' find the new layout name based on the mapping
+                        
+                        ' scenario 2.1.: find the new layout name based on the mapping
                         Dim newLayoutName As String
                         newLayoutName = FindMapping(GetCanonicalName(layoutName))
                         If newLayoutName = "" Then
@@ -92,8 +92,6 @@ Sub NormalizeSlideLayouts()
                             MsgBox "Layout '" & newLayoutName & "' not found in TargetDesign.", vbExclamation
                             Exit Sub
                         End If
-                        ' TODO: Parse the BAS file content to extract objects/mappings
-                        ' Example: look for specific patterns or execute the code if it contains functions
                         
                     End If
                 Next sld
