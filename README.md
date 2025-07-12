@@ -122,7 +122,7 @@ Run the following scripts in this order:
 ### Problem 3
 You have many non-official layout slides in your Slide Master that dont belong to the official Slide Master. 
 1. Ensure that your Slide Master is imported only once. If not go to Problem 1. 
-2. Run `Printalllayouts.bas` to get a list of all the layouts used in this Slide Master. Define which is the las official layout (e.g. `Closing`). Copy this name and paste it into `NormalizeSlideLayouts.bas`.
+2. Run `Printalllayouts.bas` to get a list of all the layouts used in this Slide Master. Define which is the last official layout (e.g. `Closing`). Copy this name and paste it into `NormalizeSlideLayouts.bas`. Also provide the mapping (same as in Problem 2).
 3. Run `NormalizeSlideLayouts.bas` to remove all those non-official layout slides. 
 
 ## Disclaimer
