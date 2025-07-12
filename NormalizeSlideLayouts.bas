@@ -16,7 +16,7 @@ Sub NormalizeSlideLayouts()
     Dim lastLayoutIndex As Integer
 
     ' Modify this to your actual master name
-    Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"
+    Const TARGET_MASTER_NAME As String =  "Cisco Light 05-12-2025"
     lastLayoutName = "Closing 1"
 
     Set oPres = ActivePresentation
@@ -47,14 +47,17 @@ Sub NormalizeSlideLayouts()
         Dim numLayouts As Integer
         numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
 
-        For j = 1 To numLayouts
+
+        For j = 0 To numLayouts - 1
             Set layout = targetDesign.SlideMaster.CustomLayouts(j)
-            If layout.Name = lastLayoutName Then
+            layoutName = layout.Name
+
+            If layoutName = lastLayoutName Then
                 lastLayoutIndex = j
             End If
 
-            If lastLayoutIndex > 0 And layout.Name <> lastLayoutName Then
-                Debug.Print "Non-official layout found: " & layout.Name
+            If lastLayoutIndex > 0 And layoutName <> lastLayoutName Then
+                Debug.Print "Non-official layout found: " & layoutName
 
                 ' 1. check if this slide was used in the presentation, if not delete it
                 ' 2. if it was used, move the slides to the official layout and delete the layout
@@ -68,15 +71,15 @@ Sub NormalizeSlideLayouts()
                 layoutWasUsed = False
                 ' replace all slides that are using this layout  
                 For Each sld In oPres.Slides                
-                    If sld.CustomLayout.Name = layout.Name Then
-                        Debug.Print "Non-official layout '" & layout.Name & "' is currently being used."
+                    If sld.CustomLayout.Name = layoutName Then
+                        Debug.Print "-Non-official layout '" & layoutName & "' is currently being used by slide " & sld.SlideIndex & "."
                         layoutWasUsed = True
 
                         ' find the new layout name based on the mapping
                         Dim newLayoutName As String
-                        newLayoutName = FindMapping(GetCanonicalName(layout.Name))
+                        newLayoutName = FindMapping(GetCanonicalName(layoutName))
                         If newLayoutName = "" Then
-                            MsgBox "Non-official layout '" & layout.Name & "' not found in Mapping.", vbExclamation
+                            MsgBox "Non-official layout '" & layoutName & "' not found in Mapping.", vbExclamation
                             Exit Sub
                         End If
 
@@ -87,7 +90,7 @@ Sub NormalizeSlideLayouts()
                             If targetDesignLayout.Name = newLayoutName Then
                                 sld.CustomLayout = targetDesignLayout
                                 foundLayout = True
-                                Debug.Print "Moved slide to new layout: " & newLayoutName
+                                Debug.Print "-Moved slide """ & sld.SlideIndex & """ to new layout: " & newLayoutName
                                 Exit For
                             End If
                         Next targetDesignLayout
@@ -104,12 +107,23 @@ Sub NormalizeSlideLayouts()
 
                 ' after having gone through all slides, delete the layout
                 If Not layoutWasUsed Then
-                    Debug.Print "Deleting unused non-official layout: " & layout.Name
+                    Debug.Print "**Deleting unused non-official layout: " & layoutName
                     layout.Delete
+                    j = j - 1 ' Adjust index since we just deleted a layout
+                    numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
                 Else
-                    Debug.Print "Deleting non-official layout after moving slides: " & layout.Name
+                    Debug.Print "**Deleting non-official layout """ & layoutName & """ after moving all slides: "
                     layout.Delete
+                    j = j - 1 ' Adjust index since we just deleted a layout
+                    numLayouts = targetDesign.SlideMaster.CustomLayouts.Count
                 End If
+                
+                if j > numLayouts - 1 Then
+                    'exit the for loop
+                    Debug.Print "Exiting loop since we deleted the last layout."
+                    Exit For
+                End If
+                Debug.Print ""
             End If
         Next j
 
