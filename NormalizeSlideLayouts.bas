@@ -4,19 +4,12 @@ Sub NormalizeSlideLayouts()
     Dim oPres As Presentation
     Dim targetDesign As Design
     Dim layout As CustomLayout
-    Dim layoutDict As Object
     Dim layoutName As String
-    Dim normLayoutName As String
-    Dim layoutCanonical As CustomLayout
-    Dim layoutCandidate As CustomLayout
-    Dim slide As slide
-    Dim sldLayout As CustomLayout
-    Dim k As Variant
     Dim lastLayoutName As String
     Dim lastLayoutIndex As Integer
 
     ' Modify this to your actual master name
-    Const TARGET_MASTER_NAME As String =  "Cisco Light 05-12-2025"
+    Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
     lastLayoutName = "Closing 1"
 
     Set oPres = ActivePresentation
@@ -162,7 +155,6 @@ End Function
 
 Function FindMapping(layoutName As String) As String
     Dim layoutMapping() As String
-    Dim newLayoutName As String
     Dim i As Integer
     Dim nItems As Integer
 
@@ -171,8 +163,7 @@ Function FindMapping(layoutName As String) As String
 
     For i = 1 To nItems
         If layoutMapping(i, 0) = layoutName Then
-            newLayoutName = layoutMapping(i, 1)
-            FindMapping = newLayoutName
+            FindMapping = layoutMapping(i, 1)
             Exit Function
         End If
     Next i
