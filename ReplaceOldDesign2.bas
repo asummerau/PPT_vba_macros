@@ -19,18 +19,9 @@ Sub ReplaceOldDesign2()
     Dim nItems As Integer
     Dim layoutMapping() As String
 
- ' TODO: Specify number of mappings you want to use
-    nItems = 90
-    ReDim layoutMapping(0 To nItems, 0 To 1)
+    layoutMapping = loadMapping()
+    nItems = UBound(layoutMapping, 1)
 
-    ' TODO: fill in the Slide Master Names and update the number of mappings
-    layoutMapping(0, 0) = "OLD MASTER NAME"
-    layoutMapping(0, 1) = "NEW MASTER NAME"
-
-    ' TODO: fill in the Layout Names you want to replace. E.g.:
-    layoutMapping(1, 0) = "Title Slide" 'layout name from old master
-    layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
-	
     Set oPres = ActivePresentation
 
     On Error Resume Next
@@ -132,4 +123,23 @@ Function GetCanonicalName(name As String) As String
     Else
         GetCanonicalName = name
     End If
+End Function
+
+Function loadMapping() As Variant
+    Dim nItems As Integer
+    Dim layoutMapping() As String
+    ' TODO: Specify number of mappings you want to use
+    nItems = 96
+    ReDim layoutMapping(0 To nItems, 0 To 1)
+
+    ' TODO: fill in the Slide Master Names and update the number of mappings
+    layoutMapping(0, 0) = "OLD MASTER NAME"
+    layoutMapping(0, 1) = "NEW MASTER NAME"
+
+    ' TODO: fill in the Layout Names you want to replace. E.g.:
+    layoutMapping(1, 0) = "Title Slide" 'layout name from old master
+    layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
+
+    ' Return the populated array
+    loadMapping = layoutMapping
 End Function
