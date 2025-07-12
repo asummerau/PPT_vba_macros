@@ -73,6 +73,9 @@ Replaces the layout of a slide with the layout of the new Slide Master which has
 - **ReplaceOldDesign2.bas**
 Replaces the layout of a slide (from a specified old Slide Master) with the layout of the new Slide Master which has to be specified in the code. This macro can be used if the layout names don't match. To make a mapping, a manual mapping has to be done and specified in the code.
 
+- **NormalizeSlideLayouts.bas**
+This macro removes slide layouts that have been added over time and are not part of the official Slide Master (these are all slides that come after the specified ending layout). Any slide that is using a non-official layout will be updated to use the official layout based on the mapping provided or if the slide is using a duplicate layout it will update to its canonical form (e.g., "1_Title Slide" will be moved to "Title Slide"). All non-official layouts are removed. 
+
 ## Useful Flows
 
 ### Problem 1
