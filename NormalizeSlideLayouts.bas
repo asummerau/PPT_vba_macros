@@ -74,28 +74,34 @@ Sub NormalizeSlideLayouts()
                         Debug.Print "-Non-official layout '" & layoutName & "' is currently being used by slide " & sld.SlideIndex & "."
                         layoutWasUsed = True
                         
-                        ' SCENARIO 2.1: Try to find canonical layout (remove numeric prefix)
+                        ' SCENARIO 2.1: -------- Try to find canonical layout (remove numeric prefix) -------
                         ' Example: "1_Title Slide" becomes "Title Slide"
                         Dim canonicalLayoutName As String
                         Dim targetDesignLayout As CustomLayout
                         canonicalLayoutName = GetCanonicalName(layoutName)
                         foundCanonicalLayout = False
-                        
-                        ' Search for canonical layout in target design
-                        For Each targetDesignLayout In targetDesign.SlideMaster.CustomLayouts
-                            If targetDesignLayout.Name = canonicalLayoutName Then
-                                sld.CustomLayout = targetDesignLayout
-                                foundCanonicalLayout = True
-                                Debug.Print "-Moved slide """ & sld.SlideIndex & """ to canonical layout: " & canonicalLayoutName
-                                Exit For
-                            End If
-                        Next targetDesignLayout
-                        
-                        If foundCanonicalLayout Then
-                            GoTo NextSlide
-                        End If
 
-                        ' SCENARIO 2.2: Use mapping table to find replacement layout
+                        If canonicalLayoutName = layoutName Then
+                            Debug.Print "-" & layoutName & "' is already in canonical form."
+                        Else
+                            ' Search for canonical layout in target design (e.)
+                            For Each targetDesignLayout In targetDesign.SlideMaster.CustomLayouts
+                                If targetDesignLayout.Name = canonicalLayoutName Then
+                                    sld.CustomLayout = targetDesignLayout
+                                    foundCanonicalLayout = True
+                                    Debug.Print "-Moved slide """ & sld.SlideIndex & """ to canonical layout: " & canonicalLayoutName
+                                    Exit For
+                                End If
+
+                                If foundCanonicalLayout Then
+                                    GoTo NextSlide
+                                End If
+
+                            Next targetDesignLayout
+  
+                        End If
+               
+                        ' SCENARIO 2.2:  -------- Use mapping table to find replacement layout -------
                         ' This handles layouts imported from other presentations
                         Dim newLayoutName As String
                         newLayoutName = FindMapping(canonicalLayoutName)
@@ -147,6 +153,7 @@ NextSlide:
         Next j
 
         If lastLayoutIndex = 0 Then
+            Debug.Print "Layout '" & lastLayoutName & "' not found in the target design. Last layout name was: " & layoutName
             MsgBox "Layout '" & lastLayoutName & "' not found in the target design.", vbExclamation
             Exit Sub
         End If
