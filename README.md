@@ -104,13 +104,13 @@ Run the following scripts in this order:
 3. Depending on layout name matching:
     - If you expect the layouts to be named the same, run `ReplaceOldDesign.bas`
     - If the layouts are named differently, you need to do a mapping of the old layout to the new layout (e.g., `Heading` from `"Blue_theme_2024"` becomes `Title` from `"Blue_theme_2025"`). Create such a mapping and save it in a file called `layoutmapping.csv` which has to be saved in the same location as your PPT file. (See `layoutmapping_empty.csv` as exmample).
-    
+
         ```csv
         OldLayoutName,NewLayoutName
         "Heading","Title"
         ..
         ```
-    Hint: you can use **Printalllayouts.bas** to print the layout names for both Slide Masters. You can directly export the layout names to csv, simply the variable `oldOrNew` to old/new and `shouldExportToFile` to True.
+    Hint: you can use **Printalllayouts.bas** to print the layout names for both Slide Masters. You can directly export the layout names to csv, simply set the variable `oldOrNew` to old/new and `shouldExportToFile` to True.
 
 4. You can run **SlideAnalysis.bas** to verify that no slide is using the old Slide Master.
 5. Run **SlideMasterCleanup.bas** to remove the old Slide Master `"Blue_theme_2024"`
