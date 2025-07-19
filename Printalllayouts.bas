@@ -24,9 +24,9 @@ Sub Printalllayouts()
         
         ' === STEP 1: Set your desired master name ===
         myDesignName = "DESIGN NAME" ' <-- Replace this with your actual master name
-        shouldExportToFile = False ' Set to True if you want to export to file
+        shouldExportToFile = True ' Set to True if you want to export to file
         oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
-        fileName = myDesignName & "_PowerPoint_Layouts.txt" 
+        fileName = "layoutmapping_" & oldOrNew & ".csv" 
 
         ' === STEP 2: Try to find that design ===
         Set myDesign = Nothing
@@ -44,36 +44,39 @@ Sub Printalllayouts()
             Exit Sub
         End If
 
-        ' === STEP 3: Collect layout names ===
-        if oldOrNew  = "old" Then
-            layoutNames = "layoutMapping(0, 0) = " & myDesign.Name & vbCrLf
-        Else
-            layoutNames = "layoutMapping(0, 1) = " & myDesign.Name & vbCrLf
-        End If
+        ' === STEP 3: Collect layout names in CSV format ===
         Dim j As Integer
         Dim numLayouts As Integer
         numLayouts = myDesign.SlideMaster.CustomLayouts.Count
 
+    If shouldExportToFile Then
+        ' === STEP 4: Set output file path in same directory as presentation ===
+        outputFile = oPres.Path & "/" & fileName
+
+        ' === STEP 5: Write to CSV file ===
+        fNum = FreeFile
+        Open outputFile For Output As #fNum
+        
+        ' Write CSV header
+        Print #fNum, "OldLayoutName,NewLayoutName"
+        
+        ' Write each layout as a separate line
         For j = 1 To numLayouts
             Set layout = myDesign.SlideMaster.CustomLayouts(j)
             Debug.Print layout.Name
-            if oldOrNew  = "old" Then
-                layoutNames = layoutNames & "layoutMapping(" & j & ", 0) = " & layout.Name & vbCrLf
+            
+            ' Create CSV row based on oldOrNew setting
+            If oldOrNew = "old" Then
+                ' Add layout name to OldLayoutName column, leave NewLayoutName empty
+                Print #fNum, """" & layout.Name & """,""""" 
             Else
-                layoutNames = layoutNames & "layoutMapping(" & j & ", 1) = " & layout.Name & vbCrLf
+                ' Add layout name to NewLayoutName column, leave OldLayoutName empty  
+                Print #fNum, """""," & """" & layout.Name & """"
             End If
         Next j
-
-    If shouldExportToFile Then
-        ' === STEP 4: Set output file path on Mac Desktop ===
-        outputFile = MacScript("return POSIX path of (path to desktop folder)") & fileName
-
-        ' === STEP 5: Write to file ===
-        fNum = FreeFile
-        Open outputFile For Output As #fNum
-        Print #fNum, layoutNames
+        
         Close #fNum
-        MsgBox "Exported layout names to: " & outputFile, vbInformation
+        MsgBox "Exported layout mappings to CSV: " & outputFile, vbInformation
     End If
     
     End With
