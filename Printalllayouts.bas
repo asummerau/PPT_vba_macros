@@ -5,8 +5,8 @@ Sub Printalllayouts()
     Dim myDesign As Design
     Dim Design As Design
     Dim layout As CustomLayout
-    Dim layoutNames As String
     Dim outputFile As String
+    Dim fileName As String
     Dim fNum As Integer
     Dim i As Integer
     Dim shouldExportToFile As Boolean
@@ -14,12 +14,11 @@ Sub Printalllayouts()
 
     ' === STEP 1: Set your desired master name ===
     Const MY_DESING_NAME As String = "ADD YOUR NEW DESIGN NAME HERE" ' <-- Replace this with your actual master name
+    Const CSV_FILENAME As String = "layoutmapping.csv" 
     shouldExportToFile = False ' Set to True if you want to export to file
     oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
-    Const CSV_FILENAME As String = "layoutmapping_" & oldOrNew & ".csv" 
 
     Set oPres = ActivePresentation
-    layoutNames = ""
 
     On Error Resume Next
     Debug.Print "-----START-----"
@@ -42,40 +41,44 @@ Sub Printalllayouts()
             Exit Sub
         End If
 
-        ' === STEP 3: Collect layout names in CSV format ===
         Dim j As Integer
         Dim numLayouts As Integer
         numLayouts = myDesign.SlideMaster.CustomLayouts.Count
 
-    If shouldExportToFile Then
-        ' === STEP 4: Set output file path in same directory as presentation ===
-        outputFile = oPres.Path & "/" & CSV_FILENAME
-
-        ' === STEP 5: Write to CSV file ===
-        fNum = FreeFile
-        Open outputFile For Output As #fNum
-        
-        ' Write CSV header
-        Print #fNum, "OldLayoutName,NewLayoutName"
-        
-        ' Write each layout as a separate line
+        ' === STEP 3: Print layout names ===
         For j = 1 To numLayouts
             Set layout = myDesign.SlideMaster.CustomLayouts(j)
             Debug.Print layout.Name
-            
-            ' Create CSV row based on oldOrNew setting
-            If oldOrNew = "old" Then
-                ' Add layout name to OldLayoutName column, leave NewLayoutName empty
-                Print #fNum, """" & layout.Name & """,""""" 
-            Else
-                ' Add layout name to NewLayoutName column, leave OldLayoutName empty  
-                Print #fNum, """""," & """" & layout.Name & """"
-            End If
         Next j
-        
-        Close #fNum
-        MsgBox "Exported layout mappings to CSV: " & outputFile, vbInformation
-    End If
+
+        ' === STEP 4: Collect layout names in CSV format ===
+        If shouldExportToFile Then
+            outputFile = oPres.Path & "/" & CSV_FILENAME
+
+            ' === STEP 5: Write to CSV file ===
+            fNum = FreeFile
+            Open outputFile For Output As #fNum
+            
+            ' Write CSV header
+            Print #fNum, "OldLayoutName,NewLayoutName"
+            
+            ' Write each layout as a separate line
+            For j = 1 To numLayouts
+                Set layout = myDesign.SlideMaster.CustomLayouts(j)
+                
+                ' Create CSV row based on oldOrNew setting
+                If oldOrNew = "old" Then
+                    ' Add layout name to OldLayoutName column, leave NewLayoutName empty
+                    Print #fNum, """" & layout.Name & """,""""" 
+                Else
+                    ' Add layout name to NewLayoutName column, leave OldLayoutName empty  
+                    Print #fNum, """""," & """" & layout.Name & """"
+                End If
+            Next j
+            
+            Close #fNum
+            MsgBox "Exported layout mappings to CSV: " & outputFile, vbInformation
+        End If
     
     End With
     Debug.Print "-----END-----"
