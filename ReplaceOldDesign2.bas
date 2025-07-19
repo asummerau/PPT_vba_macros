@@ -19,7 +19,12 @@ Sub ReplaceOldDesign2()
     Dim nItems As Integer
     Dim layoutMapping() As String
 
-    layoutMapping = loadMapping()
+    ' Modify this to your actual master name
+    Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
+    Const OLD_MASTER_NAME As String = "ADD YOUR OLD DESIGN NAME HERE"
+
+    Const CSV_FILE_NAME As String = "layoutmapping.csv"
+    layoutMapping = loadMapping(CSV_FILE_NAME)
     nItems = UBound(layoutMapping, 1)
 
     Set oPres = ActivePresentation
@@ -28,16 +33,16 @@ Sub ReplaceOldDesign2()
     Debug.Print "-----START-----"
 
     With oPres
-        Debug.Print "New Design: "; layoutMapping(0, 1)
-        Debug.Print "Old Design: "; layoutMapping(0, 0)
+        Debug.Print "New Design: "; TARGET_MASTER_NAME
+        Debug.Print "Old Design: "; OLD_MASTER_NAME
         Debug.Print
-        newDesignName = layoutMapping(0, 1)
-        oldDesignName = layoutMapping(0, 0)
+        newDesignName = TARGET_MASTER_NAME
+        oldDesignName = OLD_MASTER_NAME
 
         ' STEP 1: Find the new design in the presentation
         Set newDesign = Nothing
         Set newLayouts = Nothing
-        For i = .Designs.Count To 1 Step -1
+        For i = .Designs.Count To 0 Step -1
             layoutName = Trim(.Designs(i).Name)
             layoutName = GetCanonicalName(layoutName)
 
@@ -71,7 +76,7 @@ Sub ReplaceOldDesign2()
                 ' there are tons of duplicate layouts that start with a prefix (e.g. 1_title is the same as title)
                 layoutName = GetCanonicalName(layoutName)
 
-                For j = 1 To nItems
+                For j = 0 To nItems
                     If foundNewLayout Then Exit For
 
                      If layoutName = Trim(layoutMapping(j, 0)) Then
@@ -125,21 +130,71 @@ Function GetCanonicalName(name As String) As String
     End If
 End Function
 
-Function loadMapping() As Variant
+Function loadMapping(fileName) As Variant
+    ' This function reads layout mappings from a CSV file instead of hardcoded values
+    ' CSV Format: OldLayoutName,NewLayoutName (with header row)
+    ' File should be in the same directory as the presentation
     Dim nItems As Integer
     Dim layoutMapping() As String
-    ' TODO: Specify number of mappings you want to use
-    nItems = 96
+    Dim filePath As String
+    Dim fileNum As Integer
+    Dim lineText As String
+    Dim splitData As Variant
+    Dim i As Integer
+    
+    ' Set the path to the CSV file (same directory as presentation)
+    filePath = ActivePresentation.Path & "/" & fileName
+    fileNum = FreeFile
+    
+    ' First, count the number of lines to size the array
+    On Error GoTo FileError
+    Open filePath For Input As #fileNum
+    nItems = 0
+    While Not EOF(fileNum)
+        Line Input #fileNum, lineText
+        If Trim(lineText) <> "" Then ' Skip empty lines
+            nItems = nItems + 1
+        End If
+    Wend
+    Close #fileNum
+    
+    ' Subtract 1 for header row
+    nItems = nItems - 1
+    If nItems < 1 Then
+        MsgBox "No data found in CSV file: " & filePath, vbExclamation
+        Exit Function
+    End If
+    
+    ' Size the array
     ReDim layoutMapping(0 To nItems, 0 To 1)
-
-    ' TODO: fill in the Slide Master Names and update the number of mappings
-    layoutMapping(0, 0) = "OLD MASTER NAME"
-    layoutMapping(0, 1) = "NEW MASTER NAME"
-
-    ' TODO: fill in the Layout Names you want to replace. E.g.:
-    layoutMapping(1, 0) = "Title Slide" 'layout name from old master
-    layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
-
+    
+    ' Read the CSV file and populate the array
+    Open filePath For Input As #fileNum
+    Line Input #fileNum, lineText ' Skip header row
+    
+    i = 0
+    While Not EOF(fileNum) And i <= nItems
+        Line Input #fileNum, lineText
+        If Trim(lineText) <> "" Then ' Skip empty lines
+            ' Split by comma and clean up quotes
+            splitData = Split(lineText, """,""")
+            If UBound(splitData) >= 1 Then
+                layoutMapping(i, 0) = Trim(Replace(splitData(0), """", ""))
+                layoutMapping(i, 1) = Trim(Replace(splitData(1), """", ""))
+                i = i + 1
+            End If
+        End If
+    Wend
+    Close #fileNum
+    
     ' Return the populated array
+    loadMapping = layoutMapping
+    Exit Function
+    
+FileError:
+    MsgBox "Error reading CSV file: " & filePath & vbCrLf & "Error: " & Err.Description, vbCritical
+    If fileNum > 0 Then Close #fileNum
+    ' Return empty array on error
+    ReDim layoutMapping(0 To 0, 0 To 1)
     loadMapping = layoutMapping
 End Function
