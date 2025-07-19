@@ -8,8 +8,6 @@ Sub ReplaceOldDesign2()
     Dim layoutName As String
     Dim i As Integer, j As Integer
     Dim designName As String
-    Dim newDesignName As String
-    Dim oldDesignName As String
     Dim newDesign As Design
     Dim newLayouts As CustomLayouts
     Dim newLayout As CustomLayout
@@ -36,8 +34,6 @@ Sub ReplaceOldDesign2()
         Debug.Print "New Design: "; TARGET_MASTER_NAME
         Debug.Print "Old Design: "; OLD_MASTER_NAME
         Debug.Print
-        newDesignName = TARGET_MASTER_NAME
-        oldDesignName = OLD_MASTER_NAME
 
         ' STEP 1: Find the new design in the presentation
         Set newDesign = Nothing
@@ -46,7 +42,7 @@ Sub ReplaceOldDesign2()
             layoutName = Trim(.Designs(i).Name)
             layoutName = GetCanonicalName(layoutName)
 
-            If layoutName = newDesignName Then
+            If layoutName = TARGET_MASTER_NAME Then
                 ' Debug.Print "Found new design: " & .Designs(i).Name
                 Set newDesign = .Designs(i)
                 Set newLayouts = .Designs(i).SlideMaster.CustomLayouts
@@ -55,7 +51,7 @@ Sub ReplaceOldDesign2()
         Next i
         
         If newDesign Is Nothing Then
-            MsgBox "New design '" & newDesignName & "' not found in the presentation.", vbExclamation
+            MsgBox "New design '" & TARGET_MASTER_NAME & "' not found in the presentation.", vbExclamation
             Exit Sub
         End If
 
@@ -69,7 +65,7 @@ Sub ReplaceOldDesign2()
 
             designName = GetCanonicalName(designName)
 
-            If designName = oldDesignName Then
+            If designName = OLD_MASTER_NAME Then
                 Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Find replacement for Layout '" & layoutName & "'"
                 ' Check if a mapping exists in the predefined array
 
@@ -101,8 +97,8 @@ Sub ReplaceOldDesign2()
                     Debug.Print "WARNING: Slide " & sld.SlideIndex & ": No matching layout found for '" & layoutName & "'. Skipped."
                 End If
             
-            ElseIf designName = newDesignName Then
-                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & newDesignName & "', skipping."
+            ElseIf designName = TARGET_MASTER_NAME Then
+                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & TARGET_MASTER_NAME & "', skipping."
 
             Else
                 Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Another design was found ('" & designName & "'). Skipping."
