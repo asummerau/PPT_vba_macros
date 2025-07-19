@@ -5,14 +5,18 @@ Sub Printalllayouts()
     Dim myDesign As Design
     Dim Design As Design
     Dim layout As CustomLayout
-    Dim myDesignName As String
     Dim layoutNames As String
     Dim outputFile As String
-    Dim fileName As String
     Dim fNum As Integer
     Dim i As Integer
     Dim shouldExportToFile As Boolean
     Dim oldOrNew As String
+
+    ' === STEP 1: Set your desired master name ===
+    Const MY_DESING_NAME As String = "ADD YOUR NEW DESIGN NAME HERE" ' <-- Replace this with your actual master name
+    shouldExportToFile = False ' Set to True if you want to export to file
+    oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
+    Const CSV_FILENAME As String = "layoutmapping_" & oldOrNew & ".csv" 
 
     Set oPres = ActivePresentation
     layoutNames = ""
@@ -21,18 +25,12 @@ Sub Printalllayouts()
     Debug.Print "-----START-----"
 
     With oPres
-        
-        ' === STEP 1: Set your desired master name ===
-        myDesignName = "DESIGN NAME" ' <-- Replace this with your actual master name
-        shouldExportToFile = False ' Set to True if you want to export to file
-        oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
-        fileName = "layoutmapping_" & oldOrNew & ".csv" 
 
         ' === STEP 2: Try to find that design ===
         Set myDesign = Nothing
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
-            If design.Name = myDesignName Then
+            If design.Name = MY_DESING_NAME Then
                 Debug.Print "Found design: " & design.Name
                 Set myDesign = design
                 Exit For
@@ -40,7 +38,7 @@ Sub Printalllayouts()
         Next i
         
         If myDesign Is Nothing Then
-        MsgBox "Master design '" & myDesignName & "' not found.", vbExclamation
+        MsgBox "Master design '" & MY_DESING_NAME & "' not found.", vbExclamation
             Exit Sub
         End If
 
@@ -51,7 +49,7 @@ Sub Printalllayouts()
 
     If shouldExportToFile Then
         ' === STEP 4: Set output file path in same directory as presentation ===
-        outputFile = oPres.Path & "/" & fileName
+        outputFile = oPres.Path & "/" & CSV_FILENAME
 
         ' === STEP 5: Write to CSV file ===
         fNum = FreeFile
