@@ -9,26 +9,26 @@ Sub ReplaceOldDesign()
     Dim layoutName As String
     Dim i As Integer
     Dim designName As String
-    Dim newDesignName As String
     Dim newDesign As Design
     Dim newLayout As CustomLayout
     Dim foundLayout As Boolean
     'Dim currentLayouts As CustomLayouts
 
+    'TODO: Add here the name of the new design
+    Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
+
     Set oPres = ActivePresentation
 
     On Error Resume Next
     Debug.Print "-----START-----"
-
+    
     With oPres
-        ' TODO: Add here the name of the new design
-        newDesignName = "ADD YOUR NEW DESIGN NAME HERE"
 
         ' STEP 1: Find the new design in the presentation
         Set newDesign = Nothing
         For i = .Designs.Count To 1 Step -1
             Set design = .Designs(i)
-            If design.Name = newDesignName Then
+            If design.Name = TARGET_MASTER_NAME Then
                 Debug.Print "Found new design: " & design.Name
                 Set newDesign = design
                 Exit For
@@ -36,7 +36,7 @@ Sub ReplaceOldDesign()
         Next i
         
         If newDesign Is Nothing Then
-            MsgBox "New design '" & newDesignName & "' not found in the presentation.", vbExclamation
+            MsgBox "New design '" & TARGET_MASTER_NAME & "' not found in the presentation.", vbExclamation
             Exit Sub
         End If
 
@@ -51,8 +51,8 @@ Sub ReplaceOldDesign()
 
             foundLayout = False
             
-            If sld.Design.Name = newDesignName Then
-                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & newDesignName & "', skipping."
+            If sld.Design.Name = TARGET_MASTER_NAME Then
+                Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Design is already '" & TARGET_MASTER_NAME & "', skipping."
 
             Else
                 'Set currentLayouts = sld.Master.design.SlideMaster.CustomLayouts
@@ -67,7 +67,7 @@ Sub ReplaceOldDesign()
                 ' Check if the layout name matches any layout in the new design
                 For Each newLayout In newDesign.SlideMaster.CustomLayouts
                     If newLayout.Name = layoutName Then
-                        Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Changing design from '" & designName & "' to '" & newDesignName & "'"
+                        Debug.Print "PPT Slide #: " & sld.SlideIndex & ": Changing design from '" & designName & "' to '" & TARGET_MASTER_NAME & "'"
                         sld.Design = newDesign
                         sld.CustomLayout = newLayout
                         foundLayout = True
