@@ -2,7 +2,7 @@
 ' Any slide that is using a non-official layout will be updated to use the official layout based on the mapping provided.
 '
 ' Strategy:
-' 1. Find all non-official layouts (layouts that come after the "lastLayoutName" in the target design)
+' 1. Find all non-official layouts (layouts that come after the "LAST_LAYOUT_NAME" in the target design)
 ' 2. For each non-official layout:
 '    - Scenario 2.1: If it's a duplicate with prefix (e.g., "1_Title Slide"), try to use canonical layout ("Title Slide")
 '    - Scenario 2.2: If no canonical layout exists, use mapping table to find replacement layout
@@ -14,7 +14,6 @@ Sub NormalizeSlideLayouts()
     Dim targetDesign As Design
     Dim layout As CustomLayout
     Dim layoutName As String
-    Dim lastLayoutName As String
     Dim lastLayoutIndex As Integer
     Dim j As Integer
     Dim numLayouts As Integer
@@ -22,7 +21,7 @@ Sub NormalizeSlideLayouts()
     ' Modify this to your actual master name
     Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
     Const CSV_FILE_NAME As String = "layoutmapping.csv"
-    lastLayoutName = "Closing 1"
+    Const LAST_LAYOUT_NAME As String = "ADD NAME OF LAST OFFICIAL LAYOUT HERE"
 
     Dim layoutMapping() As String
     layoutMapping = loadMapping(CSV_FILE_NAME)
@@ -62,12 +61,12 @@ Sub NormalizeSlideLayouts()
             Set layout = targetDesign.SlideMaster.CustomLayouts(j)
             layoutName = layout.Name
 
-            If layoutName = lastLayoutName Then
+            If layoutName = LAST_LAYOUT_NAME Then
                 lastLayoutIndex = j
             End If
 
             ' Process non-official layouts (those that come after the last official layout)
-            If lastLayoutIndex > 0 And layoutName <> lastLayoutName Then
+            If lastLayoutIndex > 0 And layoutName <> LAST_LAYOUT_NAME Then
                 Debug.Print "Non-official layout found: " & layoutName
 
                 Dim sld As Slide
@@ -161,8 +160,8 @@ NextSlide:
         Next j
 
         If lastLayoutIndex = 0 Then
-            Debug.Print "Layout '" & lastLayoutName & "' not found in the target design. Last layout name was: " & layoutName
-            MsgBox "Layout '" & lastLayoutName & "' not found in the target design.", vbExclamation
+            Debug.Print "Layout '" & LAST_LAYOUT_NAME & "' not found in the target design. Last layout name was: " & layoutName
+            MsgBox "Layout '" & LAST_LAYOUT_NAME & "' not found in the target design.", vbExclamation
             Exit Sub
         End If
         
