@@ -24,7 +24,7 @@ Sub Printalllayouts()
         
         ' === STEP 1: Set your desired master name ===
         myDesignName = "DESIGN NAME" ' <-- Replace this with your actual master name
-        shouldExportToFile = True ' Set to True if you want to export to file
+        shouldExportToFile = False ' Set to True if you want to export to file
         oldOrNew = "new" ' Set to "old" if the specified design is an old design (will be replaced), if its a new design, set to "new"
         fileName = "layoutmapping_" & oldOrNew & ".csv" 
 
