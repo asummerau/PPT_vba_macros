@@ -21,7 +21,15 @@ Sub NormalizeSlideLayouts()
 
     ' Modify this to your actual master name
     Const TARGET_MASTER_NAME As String =  "ADD YOUR NEW DESIGN NAME HERE"    
+    Const CSV_FILE_NAME As String = "layoutmapping.csv"
     lastLayoutName = "Closing 1"
+
+    Dim layoutMapping() As String
+    layoutMapping = loadMapping(CSV_FILE_NAME)
+    If layoutMapping(0, 0) = "" Then
+        MsgBox "No layout mappings found in the CSV file or no file available: " & CSV_FILE_NAME, vbExclamation
+        Exit Sub
+    End If
 
     Set oPres = ActivePresentation
 
@@ -50,7 +58,7 @@ Sub NormalizeSlideLayouts()
 
         ' STEP 2: Process each layout in the target design
         ' Strategy: Find the lastLayoutIndex first, then process all layouts that come after it
-        For j = 0 To numLayouts - 1
+        For j = 0 To numLayouts
             Set layout = targetDesign.SlideMaster.CustomLayouts(j)
             layoutName = layout.Name
 
@@ -84,7 +92,7 @@ Sub NormalizeSlideLayouts()
                         If canonicalLayoutName = layoutName Then
                             Debug.Print "-" & layoutName & "' is already in canonical form."
                         Else
-                            ' Search for canonical layout in target design (e.)
+                            ' Search for canonical layout in target design
                             For Each targetDesignLayout In targetDesign.SlideMaster.CustomLayouts
                                 If targetDesignLayout.Name = canonicalLayoutName Then
                                     sld.CustomLayout = targetDesignLayout
@@ -104,7 +112,7 @@ Sub NormalizeSlideLayouts()
                         ' SCENARIO 2.2:  -------- Use mapping table to find replacement layout -------
                         ' This handles layouts imported from other presentations
                         Dim newLayoutName As String
-                        newLayoutName = FindMapping(canonicalLayoutName)
+                        newLayoutName = FindMapping(canonicalLayoutName, layoutMapping)
                         If newLayoutName = "" Then
                             MsgBox "Non-official layout '" & layoutName & "' not found in Mapping.", vbExclamation
                             Exit Sub
@@ -167,31 +175,79 @@ NextSlide:
 End Sub
 
 
-Function loadMapping() As Variant
+Function loadMapping(fileName) As Variant
+    ' This function reads layout mappings from a CSV file instead of hardcoded values
+    ' CSV Format: OldLayoutName,NewLayoutName (with header row)
+    ' File should be in the same directory as the presentation
     Dim nItems As Integer
     Dim layoutMapping() As String
-    ' TODO: Specify number of mappings you want to use
-    nItems = 96
+    Dim filePath As String
+    Dim fileNum As Integer
+    Dim lineText As String
+    Dim splitData As Variant
+    Dim i As Integer
+    
+    ' Set the path to the CSV file (same directory as presentation)
+    filePath = ActivePresentation.Path & "/" & fileName
+    fileNum = FreeFile
+    
+    ' First, count the number of lines to size the array
+    On Error GoTo FileError
+    Open filePath For Input As #fileNum
+    nItems = 0
+    While Not EOF(fileNum)
+        Line Input #fileNum, lineText
+        If Trim(lineText) <> "" Then ' Skip empty lines
+            nItems = nItems + 1
+        End If
+    Wend
+    Close #fileNum
+    
+    ' Subtract 1 for header row
+    nItems = nItems - 1
+    If nItems < 1 Then
+        MsgBox "No data found in CSV file: " & filePath, vbExclamation
+        Exit Function
+    End If
+    
+    ' Size the array
     ReDim layoutMapping(0 To nItems, 0 To 1)
-
-    ' TODO: fill in the Slide Master Names and update the number of mappings
-    layoutMapping(0, 0) = "OLD MASTER NAME"
-    layoutMapping(0, 1) = "NEW MASTER NAME"
-
-    ' TODO: fill in the Layout Names you want to replace. E.g.:
-    layoutMapping(1, 0) = "Title Slide" 'layout name from old master
-    layoutMapping(1, 1) = "New Title Slide" 'layout name from new master
-
+    
+    ' Read the CSV file and populate the array
+    Open filePath For Input As #fileNum
+    Line Input #fileNum, lineText ' Skip header row
+    
+    i = 0
+    While Not EOF(fileNum) And i <= nItems
+        Line Input #fileNum, lineText
+        If Trim(lineText) <> "" Then ' Skip empty lines
+            ' Split by comma and clean up quotes
+            splitData = Split(lineText, """,""")
+            If UBound(splitData) >= 1 Then
+                layoutMapping(i, 0) = Trim(Replace(splitData(0), """", ""))
+                layoutMapping(i, 1) = Trim(Replace(splitData(1), """", ""))
+                i = i + 1
+            End If
+        End If
+    Wend
+    Close #fileNum
+    
     ' Return the populated array
+    loadMapping = layoutMapping
+    Exit Function
+    
+FileError:
+    MsgBox "Error reading CSV file: " & filePath & vbCrLf & "Error: " & Err.Description, vbCritical
+    If fileNum > 0 Then Close #fileNum
+    ' Return empty array on error
+    ReDim layoutMapping(0 To 0, 0 To 1)
     loadMapping = layoutMapping
 End Function
 
-Function FindMapping(layoutName As String) As String
-    Dim layoutMapping() As String
+Function FindMapping(layoutName As String, layoutMapping() As String) As String
     Dim i As Integer
     Dim nItems As Integer
 
-    layoutMapping = loadMapping()
     nItems = UBound(layoutMapping, 1)
 
     For i = 1 To nItems
